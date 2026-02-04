@@ -1,7 +1,14 @@
 'use client'
 
-import { useState, useMemo } from 'react'
-import { PLANES_WEB, formatCOP, calcularDescuento, generarCodigoVenta } from '@/lib/planes'
+import { useState, useMemo, useEffect } from 'react'
+import {
+  formatCOP,
+  calcularDescuento,
+  generarCodigoVenta,
+  obtenerDescuentoWeb,
+  calcularPlanesConDescuento,
+  PlanConPrecio,
+} from '@/lib/planes'
 import { supabase } from '@/lib/supabase'
 import {
   obtenerFechasDisponibles,
@@ -10,10 +17,11 @@ import {
   tipoDia,
 } from '@/lib/fechas'
 
-type PlanSeleccionado = typeof PLANES_WEB[number] | null
-
 export default function TiendaPage() {
-  const [planSeleccionado, setPlanSeleccionado] = useState<PlanSeleccionado>(null)
+  const [planes, setPlanes] = useState<PlanConPrecio[]>([])
+  const [descuentoPorcentaje, setDescuentoPorcentaje] = useState<number>(10)
+  const [cargandoPrecios, setCargandoPrecios] = useState(true)
+  const [planSeleccionado, setPlanSeleccionado] = useState<PlanConPrecio | null>(null)
   const [cantidad, setCantidad] = useState(1)
   const [fechaVisita, setFechaVisita] = useState<Date | null>(null)
   const [formData, setFormData] = useState({
@@ -23,6 +31,18 @@ export default function TiendaPage() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Cargar descuento desde Supabase al iniciar
+  useEffect(() => {
+    async function cargarDescuento() {
+      setCargandoPrecios(true)
+      const descuento = await obtenerDescuentoWeb()
+      setDescuentoPorcentaje(descuento)
+      setPlanes(calcularPlanesConDescuento(descuento))
+      setCargandoPrecios(false)
+    }
+    cargarDescuento()
+  }, [])
 
   // Obtener fechas disponibles (solo sabados, domingos y festivos, max 15 dias adelante)
   const fechasDisponibles = useMemo(() => obtenerFechasDisponibles(15), [])
@@ -92,7 +112,7 @@ export default function TiendaPage() {
         <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
           <h1 className="text-2xl font-bold">MAWA</h1>
           <span className="bg-yellow-400 text-emerald-900 px-3 py-1 rounded-full text-sm font-semibold">
-            10% OFF Compra Online
+            {descuentoPorcentaje}% OFF Compra Online
           </span>
         </div>
       </header>
@@ -102,7 +122,7 @@ export default function TiendaPage() {
         <div className="max-w-6xl mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-4">Vive la Experiencia Mawa</h2>
           <p className="text-xl text-emerald-100">
-            Compra tu entrada online y ahorra 10% en todos los planes
+            Compra tu entrada online y ahorra {descuentoPorcentaje}% en todos los planes
           </p>
         </div>
       </section>
@@ -114,64 +134,70 @@ export default function TiendaPage() {
             Selecciona tu Plan
           </h3>
 
-          <div className="grid md:grid-cols-3 gap-6">
-            {PLANES_WEB.map((plan) => {
-              const descuento = calcularDescuento(plan.precioNormal, plan.precioWeb)
-              const isSelected = planSeleccionado?.key === plan.key
+          {cargandoPrecios ? (
+            <div className="flex justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-3 gap-6">
+              {planes.map((plan) => {
+                const descuento = calcularDescuento(plan.precioNormal, plan.precioWeb)
+                const isSelected = planSeleccionado?.key === plan.key
 
-              return (
-                <div
-                  key={plan.key}
-                  onClick={() => setPlanSeleccionado(plan)}
-                  className={`
-                    relative rounded-2xl p-6 cursor-pointer transition-all
-                    ${isSelected
-                      ? 'bg-emerald-600 text-white ring-4 ring-emerald-300 scale-105'
-                      : 'bg-white hover:shadow-lg border-2 border-gray-100'
-                    }
-                    ${'destacado' in plan && plan.destacado ? 'md:-mt-4 md:mb-4' : ''}
-                  `}
-                >
-                  {'destacado' in plan && plan.destacado && (
-                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-emerald-900 px-4 py-1 rounded-full text-sm font-bold">
-                      Recomendado
-                    </span>
-                  )}
-
-                  <h4 className={`text-xl font-bold mb-2 ${isSelected ? 'text-white' : 'text-gray-800'}`}>
-                    {plan.nombre}
-                  </h4>
-
-                  <p className={`text-sm mb-4 ${isSelected ? 'text-emerald-100' : 'text-gray-600'}`}>
-                    {plan.descripcion}
-                  </p>
-
-                  <div className="mb-4">
-                    <span className={`text-sm line-through ${isSelected ? 'text-emerald-200' : 'text-gray-400'}`}>
-                      {formatCOP(plan.precioNormal)}
-                    </span>
-                    <div className="flex items-baseline gap-2">
-                      <span className={`text-3xl font-bold ${isSelected ? 'text-white' : 'text-emerald-600'}`}>
-                        {formatCOP(plan.precioWeb)}
+                return (
+                  <div
+                    key={plan.key}
+                    onClick={() => setPlanSeleccionado(plan)}
+                    className={`
+                      relative rounded-2xl p-6 cursor-pointer transition-all
+                      ${isSelected
+                        ? 'bg-emerald-600 text-white ring-4 ring-emerald-300 scale-105'
+                        : 'bg-white hover:shadow-lg border-2 border-gray-100'
+                      }
+                      ${'destacado' in plan && plan.destacado ? 'md:-mt-4 md:mb-4' : ''}
+                    `}
+                  >
+                    {'destacado' in plan && plan.destacado && (
+                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-emerald-900 px-4 py-1 rounded-full text-sm font-bold">
+                        Recomendado
                       </span>
-                      <span className={`text-sm font-semibold ${isSelected ? 'text-yellow-300' : 'text-yellow-600'}`}>
-                        -{descuento}%
+                    )}
+
+                    <h4 className={`text-xl font-bold mb-2 ${isSelected ? 'text-white' : 'text-gray-800'}`}>
+                      {plan.nombre}
+                    </h4>
+
+                    <p className={`text-sm mb-4 ${isSelected ? 'text-emerald-100' : 'text-gray-600'}`}>
+                      {plan.descripcion}
+                    </p>
+
+                    <div className="mb-4">
+                      <span className={`text-sm line-through ${isSelected ? 'text-emerald-200' : 'text-gray-400'}`}>
+                        {formatCOP(plan.precioNormal)}
                       </span>
+                      <div className="flex items-baseline gap-2">
+                        <span className={`text-3xl font-bold ${isSelected ? 'text-white' : 'text-emerald-600'}`}>
+                          {formatCOP(plan.precioWeb)}
+                        </span>
+                        <span className={`text-sm font-semibold ${isSelected ? 'text-yellow-300' : 'text-yellow-600'}`}>
+                          -{descuento}%
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                  <ul className={`text-sm space-y-1 ${isSelected ? 'text-emerald-100' : 'text-gray-600'}`}>
-                    {plan.incluye.map((item, i) => (
-                      <li key={i} className="flex items-center gap-2">
-                        <span className={isSelected ? 'text-yellow-300' : 'text-emerald-500'}>✓</span>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )
-            })}
-          </div>
+                    <ul className={`text-sm space-y-1 ${isSelected ? 'text-emerald-100' : 'text-gray-600'}`}>
+                      {plan.incluye.map((item, i) => (
+                        <li key={i} className="flex items-center gap-2">
+                          <span className={isSelected ? 'text-yellow-300' : 'text-emerald-500'}>✓</span>
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )
+              })}
+            </div>
+          )}
         </section>
 
         {/* Formulario de compra */}

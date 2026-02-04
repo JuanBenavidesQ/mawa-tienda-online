@@ -2,13 +2,26 @@
 
 import { useSearchParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { formatCOP } from '@/lib/planes'
 
 function ExitoContent() {
   const searchParams = useSearchParams()
   const codigo = searchParams.get('codigo') || 'MAWA-XXXXXX'
   const plan = searchParams.get('plan') || 'Plan'
   const cantidad = parseInt(searchParams.get('cantidad') || '1')
+  const fechaVisitaStr = searchParams.get('fechaVisita')
+  const validoHastaStr = searchParams.get('validoHasta')
+
+  const fechaVisita = fechaVisitaStr ? new Date(fechaVisitaStr) : null
+  const validoHasta = validoHastaStr ? new Date(validoHastaStr) : null
+
+  const formatearFecha = (fecha: Date) => {
+    return fecha.toLocaleDateString('es-CO', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex flex-col">
@@ -52,10 +65,26 @@ function ExitoContent() {
               <span className="text-gray-600">Plan</span>
               <span className="font-medium text-gray-800">{plan}</span>
             </div>
-            <div className="flex justify-between py-2">
+            <div className="flex justify-between py-2 border-b border-gray-200">
               <span className="text-gray-600">Personas</span>
               <span className="font-medium text-gray-800">{cantidad}</span>
             </div>
+            {fechaVisita && (
+              <div className="flex justify-between py-2 border-b border-gray-200">
+                <span className="text-gray-600">Fecha planeada</span>
+                <span className="font-medium text-gray-800 text-right text-sm">
+                  {formatearFecha(fechaVisita)}
+                </span>
+              </div>
+            )}
+            {validoHasta && (
+              <div className="flex justify-between py-2">
+                <span className="text-gray-600">Valido hasta</span>
+                <span className="font-medium text-emerald-600 text-right text-sm">
+                  {formatearFecha(validoHasta)}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Instrucciones */}
@@ -67,6 +96,7 @@ function ExitoContent() {
               <li>1. Guarda o toma captura de este codigo</li>
               <li>2. Presentalo en la entrada de Mawa</li>
               <li>3. Recibiras tu manilla de acceso</li>
+              <li>4. Puedes usar tu codigo cualquier sabado, domingo o festivo dentro del periodo de validez</li>
             </ul>
           </div>
 

@@ -1,14 +1,21 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { PLANES_WEB, formatCOP, calcularDescuento, generarCodigoVenta } from '@/lib/planes'
 import { supabase } from '@/lib/supabase'
+import {
+  obtenerFechasDisponibles,
+  calcularFechaVencimiento,
+  formatearFechaCorta,
+  tipoDia,
+} from '@/lib/fechas'
 
 type PlanSeleccionado = typeof PLANES_WEB[number] | null
 
 export default function TiendaPage() {
   const [planSeleccionado, setPlanSeleccionado] = useState<PlanSeleccionado>(null)
   const [cantidad, setCantidad] = useState(1)
+  const [fechaVisita, setFechaVisita] = useState<Date | null>(null)
   const [formData, setFormData] = useState({
     nombre: '',
     celular: '',
@@ -17,22 +24,28 @@ export default function TiendaPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
+  // Obtener fechas disponibles (solo sabados, domingos y festivos, max 15 dias adelante)
+  const fechasDisponibles = useMemo(() => obtenerFechasDisponibles(15), [])
+
   const total = planSeleccionado ? planSeleccionado.precioWeb * cantidad : 0
   const ahorro = planSeleccionado
     ? (planSeleccionado.precioNormal - planSeleccionado.precioWeb) * cantidad
     : 0
 
+  const fechaVencimiento = fechaVisita ? calcularFechaVencimiento(fechaVisita) : null
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!planSeleccionado) return
+    if (!planSeleccionado || !fechaVisita) return
 
     setLoading(true)
     setError('')
 
     try {
       const codigo = generarCodigoVenta()
+      const vencimiento = calcularFechaVencimiento(fechaVisita)
 
-      // Crear el código en Supabase
+      // Crear el codigo en Supabase
       const { error: dbError } = await supabase
         .from('codigos_plan')
         .insert({
@@ -45,6 +58,8 @@ export default function TiendaPage() {
           cliente_email: formData.email || null,
           num_personas: cantidad,
           fecha_venta: new Date().toISOString(),
+          fecha_visita: fechaVisita.toISOString(),
+          valido_hasta: vencimiento.toISOString(),
           estado: 'PENDIENTE',
           agente_nombre: 'VENTA_WEB',
           metodo_pago: 'BOLD_ONLINE',
@@ -53,8 +68,15 @@ export default function TiendaPage() {
 
       if (dbError) throw dbError
 
-      // Redirigir a página de éxito con el código
-      window.location.href = `/exito?codigo=${codigo}&plan=${encodeURIComponent(planSeleccionado.nombre)}&cantidad=${cantidad}`
+      // Redirigir a pagina de exito con el codigo
+      const params = new URLSearchParams({
+        codigo,
+        plan: planSeleccionado.nombre,
+        cantidad: cantidad.toString(),
+        fechaVisita: fechaVisita.toISOString(),
+        validoHasta: vencimiento.toISOString(),
+      })
+      window.location.href = `/exito?${params.toString()}`
     } catch (err: any) {
       console.error('Error:', err)
       setError('Error al procesar la compra. Intenta de nuevo.')
@@ -160,6 +182,50 @@ export default function TiendaPage() {
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Selector de fecha */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Cuando planeas visitarnos? *
+                </label>
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                  {fechasDisponibles.map((fecha) => {
+                    const isSelected = fechaVisita?.toDateString() === fecha.toDateString()
+                    const tipo = tipoDia(fecha)
+
+                    return (
+                      <button
+                        key={fecha.toISOString()}
+                        type="button"
+                        onClick={() => setFechaVisita(fecha)}
+                        className={`
+                          p-3 rounded-xl text-center transition-all
+                          ${isSelected
+                            ? 'bg-emerald-600 text-white ring-2 ring-emerald-300'
+                            : 'bg-gray-50 hover:bg-emerald-50 border border-gray-200'
+                          }
+                        `}
+                      >
+                        <div className={`text-xs ${isSelected ? 'text-emerald-100' : 'text-gray-500'}`}>
+                          {tipo}
+                        </div>
+                        <div className={`font-bold ${isSelected ? 'text-white' : 'text-gray-800'}`}>
+                          {formatearFechaCorta(fecha)}
+                        </div>
+                      </button>
+                    )
+                  })}
+                </div>
+                {fechaVisita && fechaVencimiento && (
+                  <p className="mt-2 text-sm text-emerald-600 bg-emerald-50 p-2 rounded-lg">
+                    Tu codigo sera valido hasta el {fechaVencimiento.toLocaleDateString('es-CO', {
+                      weekday: 'long',
+                      day: 'numeric',
+                      month: 'long',
+                    })} (30 dias adicionales)
+                  </p>
+                )}
+              </div>
+
               {/* Cantidad */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -233,6 +299,12 @@ export default function TiendaPage() {
                   <span>{planSeleccionado.nombre} x {cantidad}</span>
                   <span>{formatCOP(planSeleccionado.precioWeb * cantidad)}</span>
                 </div>
+                {fechaVisita && (
+                  <div className="flex justify-between text-gray-600 text-sm mb-2">
+                    <span>Fecha de visita</span>
+                    <span>{formatearFechaCorta(fechaVisita)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-emerald-600 text-sm mb-2">
                   <span>Ahorro con descuento web</span>
                   <span>-{formatCOP(ahorro)}</span>
@@ -251,10 +323,10 @@ export default function TiendaPage() {
 
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !fechaVisita}
                 className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-xl text-lg transition-colors"
               >
-                {loading ? 'Procesando...' : `Pagar ${formatCOP(total)}`}
+                {loading ? 'Procesando...' : !fechaVisita ? 'Selecciona una fecha' : `Pagar ${formatCOP(total)}`}
               </button>
 
               <p className="text-center text-sm text-gray-500">
@@ -270,7 +342,7 @@ export default function TiendaPage() {
         <div className="max-w-6xl mx-auto px-4 text-center">
           <p>&copy; 2026 Mawa. Todos los derechos reservados.</p>
           <p className="text-sm mt-2">
-            Presenta tu codigo en la entrada para activar tu manilla.
+            Abrimos sabados, domingos y festivos.
           </p>
         </div>
       </footer>

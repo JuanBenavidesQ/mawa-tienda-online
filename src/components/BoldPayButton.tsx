@@ -37,6 +37,15 @@ export default function BoldPayButton({
   useEffect(() => {
     if (!containerRef.current || !apiKey || !amount || !orderId) return
 
+    // Log para debug
+    console.log('BoldPayButton mounting with:', {
+      apiKey: apiKey.substring(0, 8) + '...',
+      amount,
+      orderId,
+      integrityHash: integrityHash ? integrityHash.substring(0, 16) + '...' : 'MISSING',
+      redirectionUrl: redirectionUrl?.substring(0, 50) + '...',
+    })
+
     // Limpiar contenedor
     containerRef.current.innerHTML = ''
     setError(null)
@@ -81,8 +90,15 @@ export default function BoldPayButton({
     boldLibrary.src = 'https://checkout.bold.co/library/boldPaymentButton.js'
     boldLibrary.async = true
     boldLibrary.onload = () => {
-      // El script de Bold debería procesar el botón automáticamente
-      console.log('Bold library loaded')
+      console.log('Bold library loaded, checking for button...')
+      // Dar tiempo a Bold para procesar el botón
+      setTimeout(() => {
+        const btn = containerRef.current?.querySelector('button')
+        console.log('Bold button found:', !!btn)
+        if (!btn) {
+          console.log('Container HTML:', containerRef.current?.innerHTML)
+        }
+      }, 1000)
     }
     boldLibrary.onerror = () => {
       setError('Error cargando pasarela de pago')

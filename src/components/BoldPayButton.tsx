@@ -8,7 +8,7 @@ type BoldPayButtonProps = {
   orderId: string
   description: string
   currency?: string
-  integrityHash?: string  // Hash SHA256 para verificar integridad
+  integrityHash?: string
   customerData?: {
     email?: string
     fullName?: string
@@ -33,105 +33,98 @@ export default function BoldPayButton({
   const containerRef = useRef<HTMLDivElement>(null)
   const uniqueId = useId()
   const [error, setError] = useState<string | null>(null)
+  const [scriptLoaded, setScriptLoaded] = useState(false)
+
+  // Generar el HTML del botón Bold
+  const getBoldButtonHTML = () => {
+    const customerDataAttr = customerData
+      ? `data-customer-data='${JSON.stringify({
+          email: customerData.email || '',
+          fullName: customerData.fullName || '',
+          phone: customerData.phone || '',
+          dialCode: customerData.dialCode || '+57',
+        })}'`
+      : ''
+
+    const integrityAttr = integrityHash
+      ? `data-integrity-signature="${integrityHash}"`
+      : ''
+
+    const redirectAttr = redirectionUrl
+      ? `data-redirection-url="${redirectionUrl}"`
+      : ''
+
+    return `
+      <script
+        data-bold-button
+        data-api-key="${apiKey}"
+        data-order-id="${orderId}"
+        data-currency="${currency}"
+        data-amount="${amount}"
+        data-description="${description}"
+        data-render-mode="embedded"
+        ${integrityAttr}
+        ${redirectAttr}
+        ${customerDataAttr}
+      ></script>
+    `
+  }
 
   useEffect(() => {
     if (!containerRef.current || !apiKey || !amount || !orderId) return
 
-    // Log para debug
     console.log('BoldPayButton mounting with:', {
       apiKey: apiKey.substring(0, 8) + '...',
       amount,
       orderId,
       integrityHash: integrityHash ? integrityHash.substring(0, 16) + '...' : 'MISSING',
-      redirectionUrl: redirectionUrl?.substring(0, 50) + '...',
     })
 
-    // Limpiar contenedor
-    containerRef.current.innerHTML = ''
     setError(null)
 
-    // Crear script tag con atributos de Bold (Embedded Checkout)
-    const buttonScript = document.createElement('script')
-    buttonScript.setAttribute('data-bold-button', 'dark-L')
-    buttonScript.setAttribute('data-api-key', apiKey)
-    buttonScript.setAttribute('data-amount', amount.toString())
-    buttonScript.setAttribute('data-order-id', orderId)
-    buttonScript.setAttribute('data-currency', currency)
-    buttonScript.setAttribute('data-description', description)
-    buttonScript.setAttribute('data-render-mode', 'embedded')
+    // Insertar el HTML del botón
+    containerRef.current.innerHTML = getBoldButtonHTML()
 
-    // Hash de integridad (requerido cuando se especifica el monto)
-    if (integrityHash) {
-      buttonScript.setAttribute('data-integrity-signature', integrityHash)
+    // Remover script anterior de Bold si existe
+    const existingScript = document.querySelector('script[src*="boldPaymentButton.js"]')
+    if (existingScript) {
+      existingScript.remove()
     }
 
-    if (customerData) {
-      buttonScript.setAttribute('data-customer-data', JSON.stringify({
-        email: customerData.email || '',
-        fullName: customerData.fullName || '',
-        phone: customerData.phone || '',
-        dialCode: customerData.dialCode || '+57',
-      }))
-    }
+    // Cargar el script de Bold DESPUÉS de que el botón esté en el DOM
+    const boldScript = document.createElement('script')
+    boldScript.src = 'https://checkout.bold.co/library/boldPaymentButton.js'
+    boldScript.onload = () => {
+      console.log('Bold library loaded')
+      setScriptLoaded(true)
 
-    if (redirectionUrl) {
-      buttonScript.setAttribute('data-redirection-url', redirectionUrl)
-    }
-
-    containerRef.current.appendChild(buttonScript)
-
-    // Cargar el script de Bold en el HEAD después de agregar el botón al DOM
-    // Primero remover script anterior si existe
-    const existingBoldScript = document.querySelector('script[src*="boldPaymentButton.js"]')
-    if (existingBoldScript) {
-      existingBoldScript.remove()
-    }
-
-    const boldLibrary = document.createElement('script')
-    boldLibrary.src = 'https://checkout.bold.co/library/boldPaymentButton.js'
-    boldLibrary.async = false // Cargar síncronamente para React
-    boldLibrary.onload = () => {
-      console.log('Bold library loaded in HEAD, checking for button...')
+      // Verificar si el botón se renderizó
       setTimeout(() => {
-        const btn = containerRef.current?.querySelector('button')
-        console.log('Bold button found:', !!btn)
-        if (!btn) {
-          console.log('Container HTML:', containerRef.current?.innerHTML)
+        const btn = containerRef.current?.querySelector('button, bold-payment-button')
+        if (btn) {
+          console.log('Bold button rendered successfully')
+          onReady?.()
+        } else {
+          console.log('Bold button not found, container:', containerRef.current?.innerHTML)
         }
-      }, 1000)
+      }, 2000)
     }
-    boldLibrary.onerror = () => {
+    boldScript.onerror = () => {
       setError('Error cargando pasarela de pago')
     }
-    // Agregar al HEAD como indica Bold para React
-    document.head.appendChild(boldLibrary)
+    document.body.appendChild(boldScript)
 
-    // Notificar cuando esté listo
-    const checkButton = setInterval(() => {
-      const button = containerRef.current?.querySelector('button')
-      if (button) {
-        clearInterval(checkButton)
-        onReady?.()
-      }
-    }, 100)
-
-    // Timeout para mostrar error si no carga
+    // Timeout para mostrar error
     const timeout = setTimeout(() => {
-      clearInterval(checkButton)
-      if (!containerRef.current?.querySelector('button')) {
+      if (!containerRef.current?.querySelector('button, bold-payment-button')) {
         setError('El botón de pago no pudo cargar. Intenta recargar la página.')
       }
-    }, 10000) // 10 segundos
+    }, 15000)
 
-    // Cleanup
     return () => {
-      clearInterval(checkButton)
       clearTimeout(timeout)
-      if (containerRef.current) {
-        containerRef.current.innerHTML = ''
-      }
     }
-  }, [apiKey, amount, orderId, description, currency, integrityHash, customerData, redirectionUrl, onReady, uniqueId])
+  }, [apiKey, amount, orderId, description, currency, integrityHash, redirectionUrl])
 
   if (error) {
     return (
@@ -145,7 +138,7 @@ export default function BoldPayButton({
     <div
       ref={containerRef}
       id={`bold-button-${uniqueId}`}
-      className="bold-button-container flex justify-center"
+      className="bold-button-container flex justify-center min-h-[60px]"
     />
   )
 }

@@ -50,7 +50,7 @@ export default function BoldPayButton({
     containerRef.current.innerHTML = ''
     setError(null)
 
-    // Crear script tag con atributos de Bold
+    // Crear script tag con atributos de Bold (Embedded Checkout)
     const buttonScript = document.createElement('script')
     buttonScript.setAttribute('data-bold-button', 'dark-L')
     buttonScript.setAttribute('data-api-key', apiKey)
@@ -58,6 +58,7 @@ export default function BoldPayButton({
     buttonScript.setAttribute('data-order-id', orderId)
     buttonScript.setAttribute('data-currency', currency)
     buttonScript.setAttribute('data-description', description)
+    buttonScript.setAttribute('data-render-mode', 'embedded')
 
     // Hash de integridad (requerido cuando se especifica el monto)
     if (integrityHash) {

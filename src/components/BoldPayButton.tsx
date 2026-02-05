@@ -52,7 +52,7 @@ export default function BoldPayButton({
 
     // Crear script tag con atributos de Bold
     const buttonScript = document.createElement('script')
-    buttonScript.setAttribute('data-bold-button', 'dark-L')
+    buttonScript.setAttribute('data-bold-button', '')
     buttonScript.setAttribute('data-api-key', apiKey)
     buttonScript.setAttribute('data-amount', amount.toString())
     buttonScript.setAttribute('data-order-id', orderId)
@@ -61,7 +61,7 @@ export default function BoldPayButton({
 
     // Hash de integridad (requerido cuando se especifica el monto)
     if (integrityHash) {
-      buttonScript.setAttribute('data-integrity', integrityHash)
+      buttonScript.setAttribute('data-integrity-signature', integrityHash)
     }
 
     if (customerData) {

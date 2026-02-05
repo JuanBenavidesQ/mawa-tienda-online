@@ -207,20 +207,31 @@ export default function TiendaPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
       {/* Header */}
-      <header className="bg-emerald-800 text-white py-4">
+      <header className="bg-emerald-800 text-white py-3">
         <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
-          <h1 className="text-2xl font-bold">MAWA</h1>
+          <img
+            src="/LogoMawaVerde.jpg"
+            alt="Mawa"
+            className="h-12 w-auto rounded"
+          />
           <span className="bg-yellow-400 text-emerald-900 px-3 py-1 rounded-full text-sm font-semibold">
-            {descuentoPorcentaje}% OFF Compra Online
+            {descuentoPorcentaje}% OFF Online
           </span>
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="bg-emerald-700 text-white py-8">
+      {/* Hero con imagen de fondo */}
+      <section
+        className="relative bg-emerald-700 text-white py-12"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/AereaHotel.jpeg)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      >
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-2">Compra tus Entradas Online</h2>
-          <p className="text-emerald-100">
+          <h2 className="text-3xl font-bold mb-2 drop-shadow-lg">Compra tus Entradas Online</h2>
+          <p className="text-white/90 text-lg drop-shadow">
             Ahorra {descuentoPorcentaje}% en todos los planes
           </p>
         </div>
@@ -573,6 +584,11 @@ export default function TiendaPage() {
       {/* Footer */}
       <footer className="bg-gray-800 text-gray-400 py-8 mt-12">
         <div className="max-w-6xl mx-auto px-4 text-center">
+          <img
+            src="/LogoMawaVerde.jpg"
+            alt="Mawa"
+            className="h-10 w-auto mx-auto mb-4 rounded"
+          />
           <p>&copy; 2026 Mawa. Todos los derechos reservados.</p>
           <p className="text-sm mt-2">
             Abrimos sábados, domingos y festivos.

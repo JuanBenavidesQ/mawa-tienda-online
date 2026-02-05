@@ -63,9 +63,9 @@ function ExitoContent() {
   if (confirmandoPago) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex flex-col">
-        <header className="bg-emerald-800 text-white py-4">
+        <header className="bg-emerald-800 text-white py-3">
           <div className="max-w-6xl mx-auto px-4">
-            <h1 className="text-2xl font-bold">MAWA</h1>
+            <img src="/LogoMawaVerde.jpg" alt="Mawa" className="h-12 w-auto rounded" />
           </div>
         </header>
         <main className="flex-1 flex items-center justify-center p-4">

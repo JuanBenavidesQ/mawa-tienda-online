@@ -8,31 +8,46 @@ export function generarCodigoVenta(): string {
   return `MAWA-${generateId()}`
 }
 
+// Categorías de planes
+export type CategoriaPlanes = 'adulto' | 'infantil'
+
 // Planes base (sin descuento aplicado)
 export const PLANES_BASE = [
   {
     key: 'PACIFICO_PISCINA',
     nombre: 'Pacífico - Piscina',
-    descripcion: 'Disfruta de nuestras piscinas naturales con vista al río',
+    descripcion: 'Piscinas naturales + almuerzo + bebida + postre',
     precioBase: 60000,
-    incluye: ['Acceso a piscinas', 'Zona de hamacas', 'Parqueadero'],
+    categoria: 'adulto' as CategoriaPlanes,
+    incluye: ['Acceso a piscinas', 'Almuerzo', 'Bebida', 'Postre'],
   },
   {
     key: 'PACIFICO_PUENTES',
     nombre: 'Pacífico - Puentes',
-    descripcion: 'Aventura en los puentes colgantes sobre el río',
+    descripcion: 'Puentes colgantes + almuerzo + bebida + postre',
     precioBase: 60000,
-    incluye: ['Recorrido puentes', 'Guía acompañante', 'Parqueadero'],
+    categoria: 'adulto' as CategoriaPlanes,
+    incluye: ['Recorrido puentes', 'Almuerzo', 'Bebida', 'Postre'],
   },
   {
     key: 'TRAVESIA',
     nombre: 'Travesía Completa',
-    descripcion: 'La experiencia completa: piscinas + puentes + sendero ecológico',
+    descripcion: 'Piscinas + puentes + almuerzo + bebida + postre',
     precioBase: 70000,
-    incluye: ['Piscinas', 'Puentes', 'Sendero ecológico', 'Guía', 'Parqueadero'],
+    categoria: 'adulto' as CategoriaPlanes,
+    incluye: ['Piscinas', 'Puentes', 'Almuerzo', 'Bebida', 'Postre'],
     destacado: true,
   },
-] as const
+  {
+    key: 'INFANTIL',
+    nombre: 'Plan Infantil',
+    descripcion: 'Para niños: piscina + menú infantil + bebida + helado',
+    precioBase: 40000,
+    categoria: 'infantil' as CategoriaPlanes,
+    incluye: ['Acceso a piscinas', 'Menú infantil', 'Bebida', 'Helado'],
+    edadMaxima: 10,
+  },
+]
 
 export type PlanBase = typeof PLANES_BASE[number]
 export type PlanKey = PlanBase['key']
@@ -41,6 +56,12 @@ export type PlanKey = PlanBase['key']
 export type PlanConPrecio = PlanBase & {
   precioNormal: number
   precioWeb: number
+}
+
+// Selección de plan (para el carrito)
+export type SeleccionPlan = {
+  plan: PlanConPrecio
+  cantidad: number
 }
 
 // Obtiene el descuento configurado desde Supabase
@@ -87,4 +108,44 @@ export function formatCOP(amount: number): string {
 // Calcula el porcentaje de descuento (para mostrar en UI)
 export function calcularDescuento(precioNormal: number, precioWeb: number): number {
   return Math.round(((precioNormal - precioWeb) / precioNormal) * 100)
+}
+
+// Calcula el total del carrito
+export function calcularTotalCarrito(selecciones: Record<string, number>, planes: PlanConPrecio[]): {
+  subtotal: number
+  ahorro: number
+  total: number
+  cantidadPersonas: number
+  detalle: { key: string; nombre: string; cantidad: number; precioUnitario: number; subtotal: number }[]
+} {
+  let subtotal = 0
+  let ahorro = 0
+  let cantidadPersonas = 0
+  const detalle: { key: string; nombre: string; cantidad: number; precioUnitario: number; subtotal: number }[] = []
+
+  for (const plan of planes) {
+    const cantidad = selecciones[plan.key] || 0
+    if (cantidad > 0) {
+      const subtotalPlan = plan.precioWeb * cantidad
+      const ahorroplan = (plan.precioNormal - plan.precioWeb) * cantidad
+      subtotal += subtotalPlan
+      ahorro += ahorroplan
+      cantidadPersonas += cantidad
+      detalle.push({
+        key: plan.key,
+        nombre: plan.nombre,
+        cantidad,
+        precioUnitario: plan.precioWeb,
+        subtotal: subtotalPlan,
+      })
+    }
+  }
+
+  return {
+    subtotal,
+    ahorro,
+    total: subtotal,
+    cantidadPersonas,
+    detalle,
+  }
 }

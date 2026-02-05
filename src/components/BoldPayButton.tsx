@@ -79,19 +79,18 @@ export default function BoldPayButton({
 
     containerRef.current.appendChild(buttonScript)
 
-    // Remover script anterior de Bold si existe
+    // Cargar el script de Bold en el HEAD después de agregar el botón al DOM
+    // Primero remover script anterior si existe
     const existingBoldScript = document.querySelector('script[src*="boldPaymentButton.js"]')
     if (existingBoldScript) {
       existingBoldScript.remove()
     }
 
-    // Cargar el script de Bold después de agregar el botón
     const boldLibrary = document.createElement('script')
     boldLibrary.src = 'https://checkout.bold.co/library/boldPaymentButton.js'
-    boldLibrary.async = true
+    boldLibrary.async = false // Cargar síncronamente para React
     boldLibrary.onload = () => {
-      console.log('Bold library loaded, checking for button...')
-      // Dar tiempo a Bold para procesar el botón
+      console.log('Bold library loaded in HEAD, checking for button...')
       setTimeout(() => {
         const btn = containerRef.current?.querySelector('button')
         console.log('Bold button found:', !!btn)
@@ -103,7 +102,8 @@ export default function BoldPayButton({
     boldLibrary.onerror = () => {
       setError('Error cargando pasarela de pago')
     }
-    document.body.appendChild(boldLibrary)
+    // Agregar al HEAD como indica Bold para React
+    document.head.appendChild(boldLibrary)
 
     // Notificar cuando esté listo
     const checkButton = setInterval(() => {

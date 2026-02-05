@@ -305,7 +305,7 @@ export default function TiendaPage() {
               {/* Planes Infantil */}
               <div>
                 <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                  Plan Infantil <span className="font-normal">(hasta 10 años)</span>
+                  Plan Infantil <span className="font-normal">(hasta 12 años)</span>
                 </h4>
                 <div className="space-y-3">
                   {planesInfantil.map((plan) => {

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Bold Button</title>
+</head>
+<body>
+  <h1>Prueba Botón Bold</h1>
+  <p>Si el botón aparece abajo, Bold funciona correctamente.</p>
+  <p>Si no aparece, hay un problema con las llaves o configuración de Bold.</p>
+
+  <hr>
+
+  <!-- Botón de Bold - REEMPLAZA TU_API_KEY con la llave de identidad real -->
+  <script
+    data-bold-button
+    data-order-id="TEST001"
+    data-currency="COP"
+    data-amount="10000"
+    data-api-key="REEMPLAZAR_CON_TU_LLAVE_DE_IDENTIDAD"
+    data-description="Prueba de integracion"
+    data-redirection-url="https://comprar.mawa.com.co/exito"
+    data-render-mode="embedded"
+  ></script>
+
+  <!-- Script de Bold - debe ir DESPUÉS del botón -->
+  <script src="https://checkout.bold.co/library/boldPaymentButton.js"></script>
+
+  <hr>
+  <p><small>Abre la consola del navegador (F12) para ver errores.</small></p>
+</body>
+</html>

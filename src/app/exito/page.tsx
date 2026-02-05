@@ -1,7 +1,8 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
-import { Suspense } from 'react'
+import { Suspense, useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabase'
 
 function ExitoContent() {
   const searchParams = useSearchParams()
@@ -14,6 +15,41 @@ function ExitoContent() {
   const fechaVisita = fechaVisitaStr ? new Date(fechaVisitaStr) : null
   const validoHasta = validoHastaStr ? new Date(validoHastaStr) : null
 
+  const [confirmandoPago, setConfirmandoPago] = useState(true)
+  const [pagoConfirmado, setPagoConfirmado] = useState(false)
+
+  // Actualizar estado del código a PENDIENTE (pagado) cuando llega desde Bold
+  useEffect(() => {
+    async function confirmarPago() {
+      if (!codigo || codigo === 'MAWA-XXXXXX') {
+        setConfirmandoPago(false)
+        return
+      }
+
+      try {
+        // Actualizar el estado de PENDIENTE_PAGO a PENDIENTE (pagado, listo para canjear)
+        const { error } = await supabase
+          .from('codigos_plan')
+          .update({
+            estado: 'PENDIENTE',
+            referencia_pago: `BOLD_${new Date().toISOString()}`,
+          })
+          .eq('codigo', codigo)
+          .eq('estado', 'PENDIENTE_PAGO')
+
+        if (!error) {
+          setPagoConfirmado(true)
+        }
+      } catch (err) {
+        console.error('Error confirmando pago:', err)
+      } finally {
+        setConfirmandoPago(false)
+      }
+    }
+
+    confirmarPago()
+  }, [codigo])
+
   const formatearFecha = (fecha: Date) => {
     return fecha.toLocaleDateString('es-CO', {
       weekday: 'long',
@@ -21,6 +57,25 @@ function ExitoContent() {
       month: 'long',
       year: 'numeric',
     })
+  }
+
+  // Mostrar loading mientras se confirma el pago
+  if (confirmandoPago) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex flex-col">
+        <header className="bg-emerald-800 text-white py-4">
+          <div className="max-w-6xl mx-auto px-4">
+            <h1 className="text-2xl font-bold">MAWA</h1>
+          </div>
+        </header>
+        <main className="flex-1 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Confirmando tu pago...</p>
+          </div>
+        </main>
+      </div>
+    )
   }
 
   return (

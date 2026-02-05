@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import {
   formatCOP,
-  calcularDescuento,
   generarCodigoVenta,
   obtenerDescuentoWeb,
   calcularPlanesConDescuento,
+  calcularTotalCarrito,
   PlanConPrecio,
 } from '@/lib/planes'
 import { supabase } from '@/lib/supabase'
@@ -16,13 +16,18 @@ import {
   formatearFechaCorta,
   tipoDia,
 } from '@/lib/fechas'
+import BoldPayButton from '@/components/BoldPayButton'
+
+const BOLD_API_KEY = process.env.NEXT_PUBLIC_BOLD_API_KEY || ''
 
 export default function TiendaPage() {
   const [planes, setPlanes] = useState<PlanConPrecio[]>([])
   const [descuentoPorcentaje, setDescuentoPorcentaje] = useState<number>(10)
   const [cargandoPrecios, setCargandoPrecios] = useState(true)
-  const [planSeleccionado, setPlanSeleccionado] = useState<PlanConPrecio | null>(null)
-  const [cantidad, setCantidad] = useState(1)
+
+  // Selecciones: { 'PACIFICO_PISCINA': 2, 'INFANTIL': 1, ... }
+  const [selecciones, setSelecciones] = useState<Record<string, number>>({})
+
   const [fechaVisita, setFechaVisita] = useState<Date | null>(null)
   const [formData, setFormData] = useState({
     nombre: '',
@@ -31,6 +36,12 @@ export default function TiendaPage() {
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  // Estados para Bold
+  const [ordenConfirmada, setOrdenConfirmada] = useState(false)
+  const [codigoOrden, setCodigoOrden] = useState('')
+  const [integrityHash, setIntegrityHash] = useState('')
+  const [boldReady, setBoldReady] = useState(false)
 
   // Cargar descuento desde Supabase al iniciar
   useEffect(() => {
@@ -44,19 +55,42 @@ export default function TiendaPage() {
     cargarDescuento()
   }, [])
 
-  // Obtener fechas disponibles (solo sabados, domingos y festivos, max 15 dias adelante)
+  // Obtener fechas disponibles
   const fechasDisponibles = useMemo(() => obtenerFechasDisponibles(15), [])
 
-  const total = planSeleccionado ? planSeleccionado.precioWeb * cantidad : 0
-  const ahorro = planSeleccionado
-    ? (planSeleccionado.precioNormal - planSeleccionado.precioWeb) * cantidad
-    : 0
+  // Calcular totales
+  const totales = useMemo(() => {
+    return calcularTotalCarrito(selecciones, planes)
+  }, [selecciones, planes])
 
   const fechaVencimiento = fechaVisita ? calcularFechaVencimiento(fechaVisita) : null
+  const haySeleccion = totales.cantidadPersonas > 0
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  // Funciones para manejar cantidades
+  const incrementar = (key: string) => {
+    setSelecciones(prev => ({
+      ...prev,
+      [key]: Math.min((prev[key] || 0) + 1, 10)
+    }))
+  }
+
+  const decrementar = (key: string) => {
+    setSelecciones(prev => ({
+      ...prev,
+      [key]: Math.max((prev[key] || 0) - 1, 0)
+    }))
+  }
+
+  // Confirmar orden antes de mostrar Bold
+  const handleConfirmarOrden = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!planSeleccionado || !fechaVisita) return
+    if (!haySeleccion || !fechaVisita) return
+
+    // Validar campos requeridos
+    if (!formData.nombre.trim() || !formData.celular.trim()) {
+      setError('Por favor completa tu nombre y celular')
+      return
+    }
 
     setLoading(true)
     setError('')
@@ -65,38 +99,61 @@ export default function TiendaPage() {
       const codigo = generarCodigoVenta()
       const vencimiento = calcularFechaVencimiento(fechaVisita)
 
-      // Crear el codigo en Supabase
+      // Crear descripción del pedido
+      const descripcionPlanes = totales.detalle
+        .map(d => `${d.cantidad}x ${d.nombre}`)
+        .join(', ')
+
+      // Crear el codigo en Supabase como PENDIENTE_PAGO
       const { error: dbError } = await supabase
         .from('codigos_plan')
         .insert({
           codigo,
-          plan_tipo_key: planSeleccionado.key,
-          plan_nombre: planSeleccionado.nombre,
-          monto: total,
+          plan_tipo_key: totales.detalle.length === 1 ? totales.detalle[0].key : 'MULTIPLE',
+          plan_nombre: descripcionPlanes,
+          monto: totales.total,
           cliente_nombre: formData.nombre.toUpperCase(),
           cliente_celular: formData.celular,
           cliente_email: formData.email || null,
-          num_personas: cantidad,
+          num_personas: totales.cantidadPersonas,
           fecha_venta: new Date().toISOString(),
           fecha_visita: fechaVisita.toISOString(),
           valido_hasta: vencimiento.toISOString(),
-          estado: 'PENDIENTE',
+          estado: 'PENDIENTE_PAGO',
           agente_nombre: 'VENTA_WEB',
           metodo_pago: 'BOLD_ONLINE',
           sincronizado_local: false,
+          notas: JSON.stringify(totales.detalle),
         })
 
       if (dbError) throw dbError
 
-      // Redirigir a pagina de exito con el codigo
-      const params = new URLSearchParams({
-        codigo,
-        plan: planSeleccionado.nombre,
-        cantidad: cantidad.toString(),
-        fechaVisita: fechaVisita.toISOString(),
-        validoHasta: vencimiento.toISOString(),
-      })
-      window.location.href = `/exito?${params.toString()}`
+      // Obtener hash de integridad desde API local
+      try {
+        const hashResponse = await fetch('/api/bold/integrity-hash', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: codigo,
+            amount: totales.total,
+            currency: 'COP',
+          }),
+        })
+
+        if (hashResponse.ok) {
+          const hashData = await hashResponse.json()
+          if (hashData.ok && hashData.hash) {
+            setIntegrityHash(hashData.hash)
+          }
+        }
+      } catch (hashErr) {
+        console.warn('No se pudo obtener hash de integridad:', hashErr)
+        // Continuar sin hash (Bold podría rechazarlo)
+      }
+
+      // Guardar codigo y mostrar botón de Bold
+      setCodigoOrden(codigo)
+      setOrdenConfirmada(true)
     } catch (err: any) {
       console.error('Error:', err)
       setError('Error al procesar la compra. Intenta de nuevo.')
@@ -104,6 +161,48 @@ export default function TiendaPage() {
       setLoading(false)
     }
   }
+
+  // URL de redirección después del pago
+  const getRedirectUrl = useCallback(() => {
+    if (!codigoOrden || !fechaVisita) return ''
+
+    const vencimiento = calcularFechaVencimiento(fechaVisita)
+    const descripcionPlanes = totales.detalle
+      .map(d => `${d.cantidad}x ${d.nombre}`)
+      .join(', ')
+
+    const params = new URLSearchParams({
+      codigo: codigoOrden,
+      plan: descripcionPlanes,
+      cantidad: totales.cantidadPersonas.toString(),
+      fechaVisita: fechaVisita.toISOString(),
+      validoHasta: vencimiento.toISOString(),
+    })
+
+    // Usar el dominio actual para la redirección
+    const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+    return `${baseUrl}/exito?${params.toString()}`
+  }, [codigoOrden, fechaVisita, totales])
+
+  // Cancelar y volver a editar
+  const handleCancelarOrden = async () => {
+    if (codigoOrden) {
+      // Eliminar la orden pendiente de Supabase
+      await supabase
+        .from('codigos_plan')
+        .delete()
+        .eq('codigo', codigoOrden)
+        .eq('estado', 'PENDIENTE_PAGO')
+    }
+    setOrdenConfirmada(false)
+    setCodigoOrden('')
+    setIntegrityHash('')
+    setBoldReady(false)
+  }
+
+  // Separar planes por categoría
+  const planesAdulto = planes.filter(p => p.categoria === 'adulto')
+  const planesInfantil = planes.filter(p => p.categoria === 'infantil')
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
@@ -118,102 +217,170 @@ export default function TiendaPage() {
       </header>
 
       {/* Hero */}
-      <section className="bg-emerald-700 text-white py-12">
+      <section className="bg-emerald-700 text-white py-8">
         <div className="max-w-6xl mx-auto px-4 text-center">
-          <h2 className="text-4xl font-bold mb-4">Vive la Experiencia Mawa</h2>
-          <p className="text-xl text-emerald-100">
-            Compra tu entrada online y ahorra {descuentoPorcentaje}% en todos los planes
+          <h2 className="text-3xl font-bold mb-2">Compra tus Entradas Online</h2>
+          <p className="text-emerald-100">
+            Ahorra {descuentoPorcentaje}% en todos los planes
           </p>
         </div>
       </section>
 
-      <main className="max-w-6xl mx-auto px-4 py-12">
-        {/* Planes */}
-        <section className="mb-12">
-          <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
-            Selecciona tu Plan
-          </h3>
+      <main className="max-w-4xl mx-auto px-4 py-8">
+        {cargandoPrecios ? (
+          <div className="flex justify-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+          </div>
+        ) : (
+          <form onSubmit={handleConfirmarOrden} className="space-y-8">
+            {/* Selector de Planes */}
+            <section className="bg-white rounded-2xl shadow-lg p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">
+                1. Selecciona tus entradas
+              </h3>
 
-          {cargandoPrecios ? (
-            <div className="flex justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-3 gap-6">
-              {planes.map((plan) => {
-                const descuento = calcularDescuento(plan.precioNormal, plan.precioWeb)
-                const isSelected = planSeleccionado?.key === plan.key
+              {/* Planes Adulto */}
+              <div className="mb-6">
+                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                  Planes Adulto
+                </h4>
+                <div className="space-y-3">
+                  {planesAdulto.map((plan) => {
+                    const cantidad = selecciones[plan.key] || 0
+                    const isSelected = cantidad > 0
 
-                return (
-                  <div
-                    key={plan.key}
-                    onClick={() => setPlanSeleccionado(plan)}
-                    className={`
-                      relative rounded-2xl p-6 cursor-pointer transition-all
-                      ${isSelected
-                        ? 'bg-emerald-600 text-white ring-4 ring-emerald-300 scale-105'
-                        : 'bg-white hover:shadow-lg border-2 border-gray-100'
-                      }
-                      ${'destacado' in plan && plan.destacado ? 'md:-mt-4 md:mb-4' : ''}
-                    `}
-                  >
-                    {'destacado' in plan && plan.destacado && (
-                      <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-400 text-emerald-900 px-4 py-1 rounded-full text-sm font-bold">
-                        Recomendado
-                      </span>
-                    )}
+                    return (
+                      <div
+                        key={plan.key}
+                        className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                          isSelected
+                            ? 'border-emerald-500 bg-emerald-50'
+                            : 'border-gray-200 hover:border-emerald-300'
+                        }`}
+                      >
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h5 className="font-semibold text-gray-800">{plan.nombre}</h5>
+                            {'destacado' in plan && plan.destacado && (
+                              <span className="bg-yellow-400 text-yellow-900 text-xs px-2 py-0.5 rounded-full font-medium">
+                                Recomendado
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-sm text-gray-500">{plan.descripcion}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-sm text-gray-400 line-through">
+                              {formatCOP(plan.precioNormal)}
+                            </span>
+                            <span className="font-bold text-emerald-600">
+                              {formatCOP(plan.precioWeb)}
+                            </span>
+                          </div>
+                        </div>
 
-                    <h4 className={`text-xl font-bold mb-2 ${isSelected ? 'text-white' : 'text-gray-800'}`}>
-                      {plan.nombre}
-                    </h4>
-
-                    <p className={`text-sm mb-4 ${isSelected ? 'text-emerald-100' : 'text-gray-600'}`}>
-                      {plan.descripcion}
-                    </p>
-
-                    <div className="mb-4">
-                      <span className={`text-sm line-through ${isSelected ? 'text-emerald-200' : 'text-gray-400'}`}>
-                        {formatCOP(plan.precioNormal)}
-                      </span>
-                      <div className="flex items-baseline gap-2">
-                        <span className={`text-3xl font-bold ${isSelected ? 'text-white' : 'text-emerald-600'}`}>
-                          {formatCOP(plan.precioWeb)}
-                        </span>
-                        <span className={`text-sm font-semibold ${isSelected ? 'text-yellow-300' : 'text-yellow-600'}`}>
-                          -{descuento}%
-                        </span>
+                        <div className="flex items-center gap-3 ml-4">
+                          <button
+                            type="button"
+                            onClick={() => decrementar(plan.key)}
+                            disabled={cantidad === 0}
+                            className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg flex items-center justify-center"
+                          >
+                            -
+                          </button>
+                          <span className="w-8 text-center font-bold text-lg">{cantidad}</span>
+                          <button
+                            type="button"
+                            onClick={() => incrementar(plan.key)}
+                            className="w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg flex items-center justify-center"
+                          >
+                            +
+                          </button>
+                        </div>
                       </div>
-                    </div>
+                    )
+                  })}
+                </div>
+              </div>
 
-                    <ul className={`text-sm space-y-1 ${isSelected ? 'text-emerald-100' : 'text-gray-600'}`}>
-                      {plan.incluye.map((item, i) => (
-                        <li key={i} className="flex items-center gap-2">
-                          <span className={isSelected ? 'text-yellow-300' : 'text-emerald-500'}>✓</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )
-              })}
-            </div>
-          )}
-        </section>
-
-        {/* Formulario de compra */}
-        {planSeleccionado && (
-          <section className="bg-white rounded-2xl shadow-xl p-8 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-bold text-gray-800 mb-6">
-              Completa tu compra
-            </h3>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Selector de fecha */}
+              {/* Planes Infantil */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Cuando planeas visitarnos? *
-                </label>
-                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+                <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+                  Plan Infantil <span className="font-normal">(hasta 10 años)</span>
+                </h4>
+                <div className="space-y-3">
+                  {planesInfantil.map((plan) => {
+                    const cantidad = selecciones[plan.key] || 0
+                    const isSelected = cantidad > 0
+
+                    return (
+                      <div
+                        key={plan.key}
+                        className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
+                          isSelected
+                            ? 'border-purple-500 bg-purple-50'
+                            : 'border-gray-200 hover:border-purple-300'
+                        }`}
+                      >
+                        <div className="flex-1">
+                          <h5 className="font-semibold text-gray-800">{plan.nombre}</h5>
+                          <p className="text-sm text-gray-500">{plan.descripcion}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-sm text-gray-400 line-through">
+                              {formatCOP(plan.precioNormal)}
+                            </span>
+                            <span className="font-bold text-purple-600">
+                              {formatCOP(plan.precioWeb)}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-3 ml-4">
+                          <button
+                            type="button"
+                            onClick={() => decrementar(plan.key)}
+                            disabled={cantidad === 0}
+                            className="w-8 h-8 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed font-bold text-lg flex items-center justify-center"
+                          >
+                            -
+                          </button>
+                          <span className="w-8 text-center font-bold text-lg">{cantidad}</span>
+                          <button
+                            type="button"
+                            onClick={() => incrementar(plan.key)}
+                            className="w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-600 text-white font-bold text-lg flex items-center justify-center"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+
+              {/* Resumen de selección */}
+              {haySeleccion && (
+                <div className="mt-6 p-4 bg-gray-50 rounded-xl">
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">
+                      {totales.cantidadPersonas} {totales.cantidadPersonas === 1 ? 'persona' : 'personas'}
+                    </span>
+                    <div className="text-right">
+                      <span className="text-sm text-emerald-600">Ahorras {formatCOP(totales.ahorro)}</span>
+                      <div className="text-xl font-bold text-gray-800">{formatCOP(totales.total)}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </section>
+
+            {/* Selector de Fecha */}
+            {haySeleccion && (
+              <section className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  2. Selecciona la fecha de tu visita
+                </h3>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
                   {fechasDisponibles.map((fecha) => {
                     const isSelected = fechaVisita?.toDateString() === fecha.toDateString()
                     const tipo = tipoDia(fecha)
@@ -223,13 +390,11 @@ export default function TiendaPage() {
                         key={fecha.toISOString()}
                         type="button"
                         onClick={() => setFechaVisita(fecha)}
-                        className={`
-                          p-3 rounded-xl text-center transition-all
-                          ${isSelected
+                        className={`p-3 rounded-xl text-center transition-all ${
+                          isSelected
                             ? 'bg-emerald-600 text-white ring-2 ring-emerald-300'
                             : 'bg-gray-50 hover:bg-emerald-50 border border-gray-200'
-                          }
-                        `}
+                        }`}
                       >
                         <div className={`text-xs ${isSelected ? 'text-emerald-100' : 'text-gray-500'}`}>
                           {tipo}
@@ -242,124 +407,169 @@ export default function TiendaPage() {
                   })}
                 </div>
                 {fechaVisita && fechaVencimiento && (
-                  <p className="mt-2 text-sm text-emerald-600 bg-emerald-50 p-2 rounded-lg">
-                    Tu codigo sera valido hasta el {fechaVencimiento.toLocaleDateString('es-CO', {
+                  <p className="mt-4 text-sm text-emerald-600 bg-emerald-50 p-3 rounded-lg">
+                    Tu código será válido hasta el {fechaVencimiento.toLocaleDateString('es-CO', {
                       weekday: 'long',
                       day: 'numeric',
                       month: 'long',
-                    })} (30 dias adicionales)
+                    })} (30 días adicionales)
                   </p>
                 )}
-              </div>
+              </section>
+            )}
 
-              {/* Cantidad */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Cantidad de personas
-                </label>
-                <div className="flex items-center gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setCantidad(Math.max(1, cantidad - 1))}
-                    className="w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 font-bold text-xl"
-                  >
-                    -
-                  </button>
-                  <span className="text-2xl font-bold w-12 text-center">{cantidad}</span>
-                  <button
-                    type="button"
-                    onClick={() => setCantidad(Math.min(10, cantidad + 1))}
-                    className="w-10 h-10 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 font-bold text-xl"
-                  >
-                    +
-                  </button>
+            {/* Datos del cliente */}
+            {haySeleccion && fechaVisita && (
+              <section className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  3. Tus datos
+                </h3>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Nombre completo *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.nombre}
+                      onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="Juan Pérez"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Celular *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={formData.celular}
+                      onChange={(e) => setFormData({ ...formData, celular: e.target.value })}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                      placeholder="300 123 4567"
+                    />
+                  </div>
                 </div>
-              </div>
-
-              {/* Datos del cliente */}
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
+                <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Nombre completo *
+                    Email (para recibir tu código)
                   </label>
                   <input
-                    type="text"
-                    required
-                    value={formData.nombre}
-                    onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="Juan Perez"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
+                    placeholder="tu@email.com"
                   />
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Celular *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={formData.celular}
-                    onChange={(e) => setFormData({ ...formData, celular: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                    placeholder="300 123 4567"
-                  />
-                </div>
-              </div>
+              </section>
+            )}
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Email (para recibir tu codigo)
-                </label>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
-                  placeholder="tu@email.com"
-                />
-              </div>
+            {/* Resumen final y botón de pago */}
+            {haySeleccion && fechaVisita && (
+              <section className="bg-white rounded-2xl shadow-lg p-6">
+                <h3 className="text-xl font-bold text-gray-800 mb-4">
+                  Resumen de tu compra
+                </h3>
 
-              {/* Resumen */}
-              <div className="bg-emerald-50 rounded-xl p-4">
-                <div className="flex justify-between text-gray-600 mb-2">
-                  <span>{planSeleccionado.nombre} x {cantidad}</span>
-                  <span>{formatCOP(planSeleccionado.precioWeb * cantidad)}</span>
-                </div>
-                {fechaVisita && (
-                  <div className="flex justify-between text-gray-600 text-sm mb-2">
+                <div className="space-y-2 mb-4">
+                  {totales.detalle.map((item) => (
+                    <div key={item.key} className="flex justify-between text-gray-600">
+                      <span>{item.cantidad}x {item.nombre}</span>
+                      <span>{formatCOP(item.subtotal)}</span>
+                    </div>
+                  ))}
+                  <div className="flex justify-between text-gray-600 text-sm">
                     <span>Fecha de visita</span>
                     <span>{formatearFechaCorta(fechaVisita)}</span>
                   </div>
-                )}
-                <div className="flex justify-between text-emerald-600 text-sm mb-2">
-                  <span>Ahorro con descuento web</span>
-                  <span>-{formatCOP(ahorro)}</span>
+                  <div className="flex justify-between text-emerald-600 text-sm">
+                    <span>Ahorro con descuento web</span>
+                    <span>-{formatCOP(totales.ahorro)}</span>
+                  </div>
                 </div>
-                <div className="border-t border-emerald-200 pt-2 flex justify-between">
+
+                <div className="border-t border-gray-200 pt-4 flex justify-between items-center mb-6">
                   <span className="text-lg font-bold text-gray-800">Total a pagar</span>
-                  <span className="text-2xl font-bold text-emerald-600">{formatCOP(total)}</span>
+                  <span className="text-2xl font-bold text-emerald-600">{formatCOP(totales.total)}</span>
                 </div>
-              </div>
 
-              {error && (
-                <div className="bg-red-50 text-red-600 px-4 py-2 rounded-lg">
-                  {error}
-                </div>
-              )}
+                {error && (
+                  <div className="bg-red-50 text-red-600 px-4 py-3 rounded-xl mb-4">
+                    {error}
+                  </div>
+                )}
 
-              <button
-                type="submit"
-                disabled={loading || !fechaVisita}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-xl text-lg transition-colors"
-              >
-                {loading ? 'Procesando...' : !fechaVisita ? 'Selecciona una fecha' : `Pagar ${formatCOP(total)}`}
-              </button>
+                {!ordenConfirmada ? (
+                  <>
+                    <button
+                      type="submit"
+                      disabled={loading}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-xl text-lg transition-colors"
+                    >
+                      {loading ? 'Procesando...' : 'Continuar al pago'}
+                    </button>
+                    <p className="text-center text-sm text-gray-500 mt-4">
+                      Pago seguro procesado por Bold
+                    </p>
+                  </>
+                ) : (
+                  <div className="space-y-4">
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                      <p className="text-emerald-800 font-medium text-center">
+                        Tu código de reserva: <span className="font-bold">{codigoOrden}</span>
+                      </p>
+                      <p className="text-emerald-600 text-sm text-center mt-1">
+                        Haz clic en el botón para completar el pago
+                      </p>
+                    </div>
 
-              <p className="text-center text-sm text-gray-500">
-                Pago seguro procesado por Bold
-              </p>
-            </form>
-          </section>
+                    {BOLD_API_KEY ? (
+                      <div className="flex flex-col items-center gap-4">
+                        <BoldPayButton
+                          apiKey={BOLD_API_KEY}
+                          amount={totales.total}
+                          orderId={codigoOrden}
+                          description={`Mawa - ${totales.detalle.map(d => `${d.cantidad}x ${d.nombre}`).join(', ')}`}
+                          integrityHash={integrityHash}
+                          customerData={{
+                            fullName: formData.nombre,
+                            phone: formData.celular,
+                            email: formData.email,
+                            dialCode: '+57',
+                          }}
+                          redirectionUrl={getRedirectUrl()}
+                          onReady={() => setBoldReady(true)}
+                        />
+                        {!boldReady && (
+                          <div className="flex items-center gap-2 text-gray-500">
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600"></div>
+                            <span className="text-sm">Cargando botón de pago...</span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
+                        <p className="text-yellow-800">
+                          Pasarela de pago en configuración. Contacta a Mawa para completar tu compra.
+                        </p>
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={handleCancelarOrden}
+                      className="w-full text-gray-500 hover:text-gray-700 py-2 text-sm"
+                    >
+                      ← Volver a editar mis datos
+                    </button>
+                  </div>
+                )}
+              </section>
+            )}
+          </form>
         )}
       </main>
 
@@ -368,7 +578,7 @@ export default function TiendaPage() {
         <div className="max-w-6xl mx-auto px-4 text-center">
           <p>&copy; 2026 Mawa. Todos los derechos reservados.</p>
           <p className="text-sm mt-2">
-            Abrimos sabados, domingos y festivos.
+            Abrimos sábados, domingos y festivos.
           </p>
         </div>
       </footer>

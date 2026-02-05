@@ -86,12 +86,15 @@ export async function obtenerDescuentoWeb(): Promise<number> {
   }
 }
 
-// Calcula los planes con el descuento aplicado
+// Calcula los planes con el descuento aplicado (solo adultos)
 export function calcularPlanesConDescuento(descuentoPorcentaje: number): PlanConPrecio[] {
   return PLANES_BASE.map((plan) => ({
     ...plan,
     precioNormal: plan.precioBase,
-    precioWeb: Math.round(plan.precioBase * (1 - descuentoPorcentaje / 100)),
+    // Descuento solo aplica para planes de adulto, no para infantil
+    precioWeb: plan.categoria === 'adulto'
+      ? Math.round(plan.precioBase * (1 - descuentoPorcentaje / 100))
+      : plan.precioBase,
   }))
 }
 

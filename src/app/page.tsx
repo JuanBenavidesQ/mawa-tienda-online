@@ -43,6 +43,9 @@ export default function TiendaPage() {
   const [integrityHash, setIntegrityHash] = useState('')
   const [boldReady, setBoldReady] = useState(false)
 
+  // Estado para mensaje de máximo excedido
+  const [mostrarMensajeGrupal, setMostrarMensajeGrupal] = useState(false)
+
   // Cargar descuento desde Supabase al iniciar
   useEffect(() => {
     async function cargarDescuento() {
@@ -68,9 +71,15 @@ export default function TiendaPage() {
 
   // Funciones para manejar cantidades
   const incrementar = (key: string) => {
+    const cantidadActual = selecciones[key] || 0
+    if (cantidadActual >= 10) {
+      setMostrarMensajeGrupal(true)
+      return
+    }
+    setMostrarMensajeGrupal(false)
     setSelecciones(prev => ({
       ...prev,
-      [key]: Math.min((prev[key] || 0) + 1, 10)
+      [key]: cantidadActual + 1
     }))
   }
 
@@ -223,7 +232,7 @@ export default function TiendaPage() {
           />
           <h2 className="text-3xl font-bold mb-2 drop-shadow-lg">Compra tus Entradas Online</h2>
           <p className="text-white/90 text-lg drop-shadow">
-            Ahorra {descuentoPorcentaje}% en todos los planes
+            Ahorra {descuentoPorcentaje}% en planes de adulto
           </p>
         </div>
       </section>
@@ -360,6 +369,24 @@ export default function TiendaPage() {
                 </div>
               </div>
 
+              {/* Mensaje para grupos grandes */}
+              {mostrarMensajeGrupal && (
+                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-xl">
+                  <p className="text-red-600 text-sm text-center">
+                    Para planes grupales comunícate a nuestro WhatsApp{' '}
+                    <a
+                      href="https://wa.me/573163996541"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-bold underline hover:text-red-700"
+                    >
+                      3163996541
+                    </a>{' '}
+                    y recibe asesoría especializada.
+                  </p>
+                </div>
+              )}
+
               {/* Resumen de selección */}
               {haySeleccion && (
                 <div className="mt-6 p-4 bg-gray-50 rounded-xl">
@@ -368,7 +395,9 @@ export default function TiendaPage() {
                       {totales.cantidadPersonas} {totales.cantidadPersonas === 1 ? 'persona' : 'personas'}
                     </span>
                     <div className="text-right">
-                      <span className="text-sm text-emerald-600">Ahorras {formatCOP(totales.ahorro)}</span>
+                      {totales.ahorro > 0 && (
+                        <span className="text-sm text-emerald-600">Ahorras {formatCOP(totales.ahorro)}</span>
+                      )}
                       <div className="text-xl font-bold text-gray-800">{formatCOP(totales.total)}</div>
                     </div>
                   </div>

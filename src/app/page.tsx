@@ -206,30 +206,21 @@ export default function TiendaPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
-      {/* Header */}
-      <header className="bg-emerald-800 text-white py-3">
-        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
-          <img
-            src="/LogoMawaVerde.jpg"
-            alt="Mawa"
-            className="h-12 w-auto rounded"
-          />
-          <span className="bg-yellow-400 text-emerald-900 px-3 py-1 rounded-full text-sm font-semibold">
-            {descuentoPorcentaje}% OFF Online
-          </span>
-        </div>
-      </header>
-
-      {/* Hero con imagen de fondo */}
+      {/* Hero con logo e imagen de fondo */}
       <section
-        className="relative bg-emerald-700 text-white py-12"
+        className="relative text-white py-8"
         style={{
-          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(/AereaHotel.jpeg)',
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(/AereaHotel.jpeg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
         <div className="max-w-6xl mx-auto px-4 text-center">
+          <img
+            src="/LogoMawaVerde.jpg"
+            alt="Mawa"
+            className="h-20 w-auto mx-auto mb-4 rounded-lg shadow-lg"
+          />
           <h2 className="text-3xl font-bold mb-2 drop-shadow-lg">Compra tus Entradas Online</h2>
           <p className="text-white/90 text-lg drop-shadow">
             Ahorra {descuentoPorcentaje}% en todos los planes

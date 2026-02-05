@@ -52,7 +52,7 @@ export default function BoldPayButton({
 
     // Crear script tag con atributos de Bold
     const buttonScript = document.createElement('script')
-    buttonScript.setAttribute('data-bold-button', '')
+    buttonScript.setAttribute('data-bold-button', 'dark-L')
     buttonScript.setAttribute('data-api-key', apiKey)
     buttonScript.setAttribute('data-amount', amount.toString())
     buttonScript.setAttribute('data-order-id', orderId)

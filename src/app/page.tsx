@@ -509,47 +509,44 @@ export default function TiendaPage() {
                       disabled={loading}
                       className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-400 text-white font-bold py-4 px-6 rounded-xl text-lg transition-colors"
                     >
-                      {loading ? 'Procesando...' : 'Continuar al pago'}
+                      {loading ? 'Preparando pago...' : 'Pagar con Bold'}
                     </button>
                     <p className="text-center text-sm text-gray-500 mt-4">
-                      Pago seguro procesado por Bold
+                      Pago seguro procesado por Bold - Tarjetas, PSE, Nequi
                     </p>
                   </>
                 ) : (
                   <div className="space-y-4">
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                      <p className="text-emerald-800 font-medium text-center">
-                        Tu código de reserva: <span className="font-bold">{codigoOrden}</span>
-                      </p>
-                      <p className="text-emerald-600 text-sm text-center mt-1">
-                        Haz clic en el botón para completar el pago
-                      </p>
-                    </div>
-
                     {BOLD_API_KEY ? (
-                      <div className="flex flex-col items-center gap-4">
-                        <BoldPayButton
-                          apiKey={BOLD_API_KEY}
-                          amount={totales.total}
-                          orderId={codigoOrden}
-                          description={`Mawa - ${totales.detalle.map(d => `${d.cantidad}x ${d.nombre}`).join(', ')}`}
-                          integrityHash={integrityHash}
-                          customerData={{
-                            fullName: formData.nombre,
-                            phone: formData.celular,
-                            email: formData.email,
-                            dialCode: '+57',
-                          }}
-                          redirectionUrl={getRedirectUrl()}
-                          onReady={() => setBoldReady(true)}
-                        />
-                        {!boldReady && (
-                          <div className="flex items-center gap-2 text-gray-500">
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600"></div>
-                            <span className="text-sm">Cargando botón de pago...</span>
+                      <>
+                        {!boldReady ? (
+                          <div className="flex flex-col items-center gap-3 py-4">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-emerald-600"></div>
+                            <span className="text-gray-600">Cargando pasarela de pago...</span>
                           </div>
+                        ) : (
+                          <p className="text-center text-gray-600 text-sm mb-2">
+                            Haz clic en el botón para completar tu pago
+                          </p>
                         )}
-                      </div>
+                        <div className="flex flex-col items-center">
+                          <BoldPayButton
+                            apiKey={BOLD_API_KEY}
+                            amount={totales.total}
+                            orderId={codigoOrden}
+                            description={`Mawa - ${totales.detalle.map(d => `${d.cantidad}x ${d.nombre}`).join(', ')}`}
+                            integrityHash={integrityHash}
+                            customerData={{
+                              fullName: formData.nombre,
+                              phone: formData.celular,
+                              email: formData.email,
+                              dialCode: '+57',
+                            }}
+                            redirectionUrl={getRedirectUrl()}
+                            onReady={() => setBoldReady(true)}
+                          />
+                        </div>
+                      </>
                     ) : (
                       <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 text-center">
                         <p className="text-yellow-800">

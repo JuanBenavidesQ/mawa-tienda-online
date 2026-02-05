@@ -5,9 +5,13 @@ import {
   formatCOP,
   generarCodigoVenta,
   obtenerDescuentoWeb,
-  calcularPlanesConDescuento,
+  obtenerDescuentosPorPlan,
+  calcularPlanesConDescuentos,
   calcularTotalCarrito,
+  filtrarPlanesPorTipo,
+  esFechaValidaAlojamiento,
   PlanConPrecio,
+  TipoPlan,
 } from '@/lib/planes'
 import { supabase } from '@/lib/supabase'
 import {
@@ -24,6 +28,9 @@ export default function TiendaPage() {
   const [planes, setPlanes] = useState<PlanConPrecio[]>([])
   const [descuentoPorcentaje, setDescuentoPorcentaje] = useState<number>(10)
   const [cargandoPrecios, setCargandoPrecios] = useState(true)
+
+  // Tab activo: 'pasadia' o 'alojamiento'
+  const [tabActivo, setTabActivo] = useState<TipoPlan>('pasadia')
 
   // Selecciones: { 'PACIFICO_PISCINA': 2, 'INFANTIL': 1, ... }
   const [selecciones, setSelecciones] = useState<Record<string, number>>({})
@@ -46,20 +53,29 @@ export default function TiendaPage() {
   // Estado para mensaje de máximo excedido
   const [mostrarMensajeGrupal, setMostrarMensajeGrupal] = useState(false)
 
-  // Cargar descuento desde Supabase al iniciar
+  // Cargar descuentos desde Supabase al iniciar
   useEffect(() => {
-    async function cargarDescuento() {
+    async function cargarDescuentos() {
       setCargandoPrecios(true)
-      const descuento = await obtenerDescuentoWeb()
-      setDescuentoPorcentaje(descuento)
-      setPlanes(calcularPlanesConDescuento(descuento))
+      const [descuentoGeneral, descuentosPorPlan] = await Promise.all([
+        obtenerDescuentoWeb(),
+        obtenerDescuentosPorPlan(),
+      ])
+      setDescuentoPorcentaje(descuentoGeneral)
+      setPlanes(calcularPlanesConDescuentos(descuentosPorPlan, descuentoGeneral))
       setCargandoPrecios(false)
     }
-    cargarDescuento()
+    cargarDescuentos()
   }, [])
 
-  // Obtener fechas disponibles
-  const fechasDisponibles = useMemo(() => obtenerFechasDisponibles(15), [])
+  // Obtener fechas disponibles según el tab activo
+  const fechasDisponibles = useMemo(() => {
+    const fechas = obtenerFechasDisponibles(30) // Más fechas para alojamiento
+    if (tabActivo === 'alojamiento') {
+      return fechas.filter(esFechaValidaAlojamiento)
+    }
+    return fechas.slice(0, 15) // Solo 15 para pasadía
+  }, [tabActivo])
 
   // Calcular totales
   const totales = useMemo(() => {
@@ -209,9 +225,19 @@ export default function TiendaPage() {
     setBoldReady(false)
   }
 
-  // Separar planes por categoría
-  const planesAdulto = planes.filter(p => p.categoria === 'adulto')
-  const planesInfantil = planes.filter(p => p.categoria === 'infantil')
+  // Filtrar planes por tab activo
+  const planesDelTab = useMemo(() => filtrarPlanesPorTipo(planes, tabActivo), [planes, tabActivo])
+  const planesAdulto = planesDelTab.filter(p => p.categoria === 'adulto')
+  const planesInfantil = planesDelTab.filter(p => p.categoria === 'infantil')
+
+  // Limpiar selecciones al cambiar de tab
+  const handleCambiarTab = (nuevoTab: TipoPlan) => {
+    setTabActivo(nuevoTab)
+    setSelecciones({})
+    setFechaVisita(null)
+    setOrdenConfirmada(false)
+    setCodigoOrden('')
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white">
@@ -230,14 +256,44 @@ export default function TiendaPage() {
             alt="Mawa"
             className="h-20 w-auto mx-auto mb-4 rounded-lg shadow-lg"
           />
-          <h2 className="text-3xl font-bold mb-2 drop-shadow-lg">Compra tus Entradas Online</h2>
+          <h2 className="text-3xl font-bold mb-2 drop-shadow-lg">
+            {tabActivo === 'pasadia' ? 'Compra tus Entradas Online' : 'Reserva tu Alojamiento'}
+          </h2>
           <p className="text-white/90 text-lg drop-shadow">
-            Ahorra {descuentoPorcentaje}% en planes de adulto
+            {descuentoPorcentaje > 0 ? `Ahorra ${descuentoPorcentaje}% en planes de adulto` : 'Piscinas, toboganes y puentes tibetanos'}
           </p>
         </div>
       </section>
 
       <main className="max-w-4xl mx-auto px-4 py-8">
+        {/* Tabs de Pasadía / Alojamiento */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-white rounded-full p-1 shadow-md inline-flex">
+            <button
+              type="button"
+              onClick={() => handleCambiarTab('pasadia')}
+              className={`px-6 py-3 rounded-full font-semibold transition-all ${
+                tabActivo === 'pasadia'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-gray-600 hover:text-emerald-600'
+              }`}
+            >
+              Pasadía
+            </button>
+            <button
+              type="button"
+              onClick={() => handleCambiarTab('alojamiento')}
+              className={`px-6 py-3 rounded-full font-semibold transition-all ${
+                tabActivo === 'alojamiento'
+                  ? 'bg-amber-600 text-white shadow-sm'
+                  : 'text-gray-600 hover:text-amber-600'
+              }`}
+            >
+              Alojamiento
+            </button>
+          </div>
+        </div>
+
         {cargandoPrecios ? (
           <div className="flex justify-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
@@ -247,43 +303,51 @@ export default function TiendaPage() {
             {/* Selector de Planes */}
             <section className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-800 mb-4">
-                1. Selecciona tus entradas
+                1. Selecciona tus {tabActivo === 'pasadia' ? 'entradas' : 'reservaciones'}
               </h3>
 
               {/* Planes Adulto */}
               <div className="mb-6">
                 <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                  Planes Adulto
+                  {tabActivo === 'pasadia' ? 'Planes Adulto' : 'Alojamiento Adulto'}
                 </h4>
                 <div className="space-y-3">
                   {planesAdulto.map((plan) => {
                     const cantidad = selecciones[plan.key] || 0
                     const isSelected = cantidad > 0
 
+                    const colorBorder = tabActivo === 'pasadia' ? 'emerald' : 'amber'
+
                     return (
                       <div
                         key={plan.key}
                         className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
                           isSelected
-                            ? 'border-emerald-500 bg-emerald-50'
-                            : 'border-gray-200 hover:border-emerald-300'
+                            ? `border-${colorBorder}-500 bg-${colorBorder}-50`
+                            : `border-gray-200 hover:border-${colorBorder}-300`
                         }`}
+                        style={isSelected ? {
+                          borderColor: tabActivo === 'alojamiento' ? '#f59e0b' : '#10b981',
+                          backgroundColor: tabActivo === 'alojamiento' ? '#fffbeb' : '#ecfdf5'
+                        } : {}}
                       >
                         <div className="flex-1">
                           <div className="flex items-center gap-2">
                             <h5 className="font-semibold text-gray-800">{plan.nombre}</h5>
                             {'destacado' in plan && plan.destacado && (
-                              <span className="bg-yellow-400 text-yellow-900 text-xs px-2 py-0.5 rounded-full font-medium">
+                              <span className={`${tabActivo === 'alojamiento' ? 'bg-amber-400 text-amber-900' : 'bg-yellow-400 text-yellow-900'} text-xs px-2 py-0.5 rounded-full font-medium`}>
                                 Recomendado
                               </span>
                             )}
                           </div>
                           <p className="text-sm text-gray-500">{plan.descripcion}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-sm text-gray-400 line-through">
-                              {formatCOP(plan.precioNormal)}
-                            </span>
-                            <span className="font-bold text-emerald-600">
+                            {plan.precioNormal !== plan.precioWeb && (
+                              <span className="text-sm text-gray-400 line-through">
+                                {formatCOP(plan.precioNormal)}
+                              </span>
+                            )}
+                            <span className={`font-bold ${tabActivo === 'alojamiento' ? 'text-amber-600' : 'text-emerald-600'}`}>
                               {formatCOP(plan.precioWeb)}
                             </span>
                           </div>
@@ -302,7 +366,7 @@ export default function TiendaPage() {
                           <button
                             type="button"
                             onClick={() => incrementar(plan.key)}
-                            className="w-8 h-8 rounded-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-lg flex items-center justify-center"
+                            className={`w-8 h-8 rounded-full ${tabActivo === 'alojamiento' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-emerald-500 hover:bg-emerald-600'} text-white font-bold text-lg flex items-center justify-center`}
                           >
                             +
                           </button>
@@ -313,33 +377,41 @@ export default function TiendaPage() {
                 </div>
               </div>
 
-              {/* Planes Infantil */}
+              {/* Planes Infantil/Niño */}
               <div>
                 <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
-                  Plan Infantil <span className="font-normal">(hasta 12 años)</span>
+                  {tabActivo === 'pasadia' ? 'Plan Infantil' : 'Alojamiento Niño'} <span className="font-normal">(hasta 12 años)</span>
                 </h4>
                 <div className="space-y-3">
                   {planesInfantil.map((plan) => {
                     const cantidad = selecciones[plan.key] || 0
                     const isSelected = cantidad > 0
+                    // Para pasadía usar purple, para alojamiento usar amber más claro
+                    const colorInfantil = tabActivo === 'pasadia' ? 'purple' : 'amber'
 
                     return (
                       <div
                         key={plan.key}
                         className={`flex items-center justify-between p-4 rounded-xl border-2 transition-all ${
                           isSelected
-                            ? 'border-purple-500 bg-purple-50'
-                            : 'border-gray-200 hover:border-purple-300'
+                            ? `border-${colorInfantil}-500 bg-${colorInfantil}-50`
+                            : `border-gray-200 hover:border-${colorInfantil}-300`
                         }`}
+                        style={isSelected ? {
+                          borderColor: tabActivo === 'alojamiento' ? '#fbbf24' : '#a855f7',
+                          backgroundColor: tabActivo === 'alojamiento' ? '#fef3c7' : '#faf5ff'
+                        } : {}}
                       >
                         <div className="flex-1">
                           <h5 className="font-semibold text-gray-800">{plan.nombre}</h5>
                           <p className="text-sm text-gray-500">{plan.descripcion}</p>
                           <div className="flex items-center gap-2 mt-1">
-                            <span className="text-sm text-gray-400 line-through">
-                              {formatCOP(plan.precioNormal)}
-                            </span>
-                            <span className="font-bold text-purple-600">
+                            {plan.precioNormal !== plan.precioWeb && (
+                              <span className="text-sm text-gray-400 line-through">
+                                {formatCOP(plan.precioNormal)}
+                              </span>
+                            )}
+                            <span className={`font-bold ${tabActivo === 'alojamiento' ? 'text-amber-600' : 'text-purple-600'}`}>
                               {formatCOP(plan.precioWeb)}
                             </span>
                           </div>
@@ -358,7 +430,7 @@ export default function TiendaPage() {
                           <button
                             type="button"
                             onClick={() => incrementar(plan.key)}
-                            className="w-8 h-8 rounded-full bg-purple-500 hover:bg-purple-600 text-white font-bold text-lg flex items-center justify-center"
+                            className={`w-8 h-8 rounded-full ${tabActivo === 'alojamiento' ? 'bg-amber-500 hover:bg-amber-600' : 'bg-purple-500 hover:bg-purple-600'} text-white font-bold text-lg flex items-center justify-center`}
                           >
                             +
                           </button>
@@ -409,12 +481,18 @@ export default function TiendaPage() {
             {haySeleccion && (
               <section className="bg-white rounded-2xl shadow-lg p-6">
                 <h3 className="text-xl font-bold text-gray-800 mb-4">
-                  2. Selecciona la fecha de tu visita
+                  2. {tabActivo === 'pasadia' ? 'Selecciona la fecha de tu visita' : 'Selecciona la fecha de llegada'}
                 </h3>
+                {tabActivo === 'alojamiento' && (
+                  <p className="text-sm text-amber-600 bg-amber-50 p-3 rounded-lg mb-4">
+                    El alojamiento está disponible sábados y domingos de puente festivo
+                  </p>
+                )}
                 <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
                   {fechasDisponibles.map((fecha) => {
                     const isSelected = fechaVisita?.toDateString() === fecha.toDateString()
                     const tipo = tipoDia(fecha)
+                    const colorBase = tabActivo === 'pasadia' ? 'emerald' : 'amber'
 
                     return (
                       <button
@@ -423,11 +501,13 @@ export default function TiendaPage() {
                         onClick={() => setFechaVisita(fecha)}
                         className={`p-3 rounded-xl text-center transition-all ${
                           isSelected
-                            ? 'bg-emerald-600 text-white ring-2 ring-emerald-300'
-                            : 'bg-gray-50 hover:bg-emerald-50 border border-gray-200'
+                            ? `bg-${colorBase}-600 text-white ring-2 ring-${colorBase}-300`
+                            : `bg-gray-50 hover:bg-${colorBase}-50 border border-gray-200`
                         }`}
+                        style={isSelected ? { backgroundColor: tabActivo === 'alojamiento' ? '#d97706' : '#059669' } : {}}
                       >
-                        <div className={`text-xs ${isSelected ? 'text-emerald-100' : 'text-gray-500'}`}>
+                        <div className={`text-xs ${isSelected ? `text-${colorBase}-100` : 'text-gray-500'}`}
+                          style={isSelected ? { color: 'rgba(255,255,255,0.8)' } : {}}>
                           {tipo}
                         </div>
                         <div className={`font-bold ${isSelected ? 'text-white' : 'text-gray-800'}`}>
@@ -438,7 +518,7 @@ export default function TiendaPage() {
                   })}
                 </div>
                 {fechaVisita && fechaVencimiento && (
-                  <p className="mt-4 text-sm text-emerald-600 bg-emerald-50 p-3 rounded-lg">
+                  <p className={`mt-4 text-sm ${tabActivo === 'pasadia' ? 'text-emerald-600 bg-emerald-50' : 'text-amber-600 bg-amber-50'} p-3 rounded-lg`}>
                     Tu código será válido hasta el {fechaVencimiento.toLocaleDateString('es-CO', {
                       weekday: 'long',
                       day: 'numeric',

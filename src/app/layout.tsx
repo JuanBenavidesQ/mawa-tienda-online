@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Compra tu Entrada | Mawa",
-  description: "Compra tu entrada online a Mawa y ahorra 10%. Piscinas naturales, puentes colgantes y senderos ecologicos.",
+  description: "Compra tu entrada online a Mawa y ahorra. Piscinas y toboganes, puentes tibetanos, restaurante y diversion para toda la familia.",
 };
 
 export default function RootLayout({

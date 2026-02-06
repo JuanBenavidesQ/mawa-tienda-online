@@ -40,6 +40,8 @@ export default function TiendaPage() {
     nombre: '',
     celular: '',
     email: '',
+    aceptaPolitica: false,
+    aceptaMarketing: false,
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -117,6 +119,12 @@ export default function TiendaPage() {
       return
     }
 
+    // Validar aceptación de política de datos
+    if (!formData.aceptaPolitica) {
+      setError('Debes aceptar la política de tratamiento de datos para continuar')
+      return
+    }
+
     setLoading(true)
     setError('')
 
@@ -149,6 +157,8 @@ export default function TiendaPage() {
           metodo_pago: 'BOLD_ONLINE',
           sincronizado_local: false,
           notas: JSON.stringify(totales.detalle),
+          acepta_politica: formData.aceptaPolitica,
+          acepta_marketing: formData.aceptaMarketing,
         })
 
       if (dbError) throw dbError
@@ -574,6 +584,41 @@ export default function TiendaPage() {
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="tu@email.com"
                   />
+                </div>
+
+                {/* Checkboxes de consentimiento */}
+                <div className="mt-6 space-y-3">
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.aceptaPolitica}
+                      onChange={(e) => setFormData({ ...formData, aceptaPolitica: e.target.checked })}
+                      className="mt-1 w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                    />
+                    <span className="text-sm text-gray-600">
+                      Acepto la{' '}
+                      <a
+                        href="/politica-datos"
+                        target="_blank"
+                        className="text-emerald-600 underline hover:text-emerald-700"
+                      >
+                        política de tratamiento de datos personales
+                      </a>{' '}
+                      <span className="text-red-500">*</span>
+                    </span>
+                  </label>
+
+                  <label className="flex items-start gap-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.aceptaMarketing}
+                      onChange={(e) => setFormData({ ...formData, aceptaMarketing: e.target.checked })}
+                      className="mt-1 w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
+                    />
+                    <span className="text-sm text-gray-600">
+                      Quiero recibir promociones y ofertas exclusivas por WhatsApp o email
+                    </span>
+                  </label>
                 </div>
               </section>
             )}

@@ -4,7 +4,6 @@ import { useState, useMemo, useEffect, useCallback } from 'react'
 import {
   formatCOP,
   generarCodigoVenta,
-  obtenerDescuentoWeb,
   obtenerDescuentosPorPlan,
   calcularPlanesConDescuentos,
   calcularTotalCarrito,
@@ -26,7 +25,6 @@ const BOLD_API_KEY = process.env.NEXT_PUBLIC_BOLD_API_KEY || ''
 
 export default function TiendaPage() {
   const [planes, setPlanes] = useState<PlanConPrecio[]>([])
-  const [descuentoPorcentaje, setDescuentoPorcentaje] = useState<number>(10)
   const [cargandoPrecios, setCargandoPrecios] = useState(true)
 
   // Tab activo: 'pasadia' o 'alojamiento'
@@ -55,16 +53,12 @@ export default function TiendaPage() {
   // Estado para mensaje de máximo excedido
   const [mostrarMensajeGrupal, setMostrarMensajeGrupal] = useState(false)
 
-  // Cargar descuentos desde Supabase al iniciar
+  // Cargar descuentos por plan desde Supabase al iniciar
   useEffect(() => {
     async function cargarDescuentos() {
       setCargandoPrecios(true)
-      const [descuentoGeneral, descuentosPorPlan] = await Promise.all([
-        obtenerDescuentoWeb(),
-        obtenerDescuentosPorPlan(),
-      ])
-      setDescuentoPorcentaje(descuentoGeneral)
-      setPlanes(calcularPlanesConDescuentos(descuentosPorPlan, descuentoGeneral))
+      const descuentosPorPlan = await obtenerDescuentosPorPlan()
+      setPlanes(calcularPlanesConDescuentos(descuentosPorPlan))
       setCargandoPrecios(false)
     }
     cargarDescuentos()
@@ -155,6 +149,7 @@ export default function TiendaPage() {
           estado: 'PENDIENTE_PAGO',
           agente_nombre: 'VENTA_WEB',
           metodo_pago: 'BOLD_ONLINE',
+          tipo_venta: 'WEB',
           sincronizado_local: false,
           notas: JSON.stringify(totales.detalle),
           acepta_politica: formData.aceptaPolitica,
@@ -270,7 +265,7 @@ export default function TiendaPage() {
             {tabActivo === 'pasadia' ? 'Compra tus Entradas Online' : 'Reserva tu Alojamiento'}
           </h2>
           <p className="text-white/90 text-lg drop-shadow">
-            {descuentoPorcentaje > 0 ? `Ahorra ${descuentoPorcentaje}% en planes de adulto` : 'Piscinas, toboganes y puentes tibetanos'}
+            Piscinas, toboganes y puentes tibetanos
           </p>
         </div>
       </section>
@@ -527,15 +522,6 @@ export default function TiendaPage() {
                     )
                   })}
                 </div>
-                {fechaVisita && fechaVencimiento && (
-                  <p className={`mt-4 text-sm ${tabActivo === 'pasadia' ? 'text-emerald-600 bg-emerald-50' : 'text-amber-600 bg-amber-50'} p-3 rounded-lg`}>
-                    Tu código será válido hasta el {fechaVencimiento.toLocaleDateString('es-CO', {
-                      weekday: 'long',
-                      day: 'numeric',
-                      month: 'long',
-                    })} (30 días adicionales)
-                  </p>
-                )}
               </section>
             )}
 

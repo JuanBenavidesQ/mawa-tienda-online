@@ -5,6 +5,7 @@ import {
   formatCOP,
   generarCodigoVenta,
   obtenerDescuentosPorPlan,
+  cargarPlanesBase,
   calcularPlanesConDescuentos,
   calcularTotalCarrito,
   filtrarPlanesPorTipo,
@@ -53,15 +54,18 @@ export default function TiendaPage() {
   // Estado para mensaje de máximo excedido
   const [mostrarMensajeGrupal, setMostrarMensajeGrupal] = useState(false)
 
-  // Cargar descuentos por plan desde Supabase al iniciar
+  // Cargar planes y descuentos desde Supabase al iniciar
   useEffect(() => {
-    async function cargarDescuentos() {
+    async function cargarTodo() {
       setCargandoPrecios(true)
-      const descuentosPorPlan = await obtenerDescuentosPorPlan()
-      setPlanes(calcularPlanesConDescuentos(descuentosPorPlan))
+      const [descuentosPorPlan, planesBase] = await Promise.all([
+        obtenerDescuentosPorPlan(),
+        cargarPlanesBase(),
+      ])
+      setPlanes(calcularPlanesConDescuentos(descuentosPorPlan, planesBase))
       setCargandoPrecios(false)
     }
-    cargarDescuentos()
+    cargarTodo()
   }, [])
 
   // Obtener fechas disponibles según el tab activo

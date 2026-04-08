@@ -76,8 +76,64 @@ export const PLANES_BASE = [
   },
 ]
 
-export type PlanBase = typeof PLANES_BASE[number]
-export type PlanKey = PlanBase['key']
+// Tipo explícito del plan (no inferido del const, para que cargarPlanesBase() pueda construirlo)
+export type PlanBase = {
+  key: string
+  nombre: string
+  descripcion: string
+  precioBase: number
+  categoria: CategoriaPlanes
+  tipo: TipoPlan
+  incluye: string[]
+  destacado?: boolean
+  edadMaxima?: number
+}
+export type PlanKey = string
+
+// Mapa de metadatos UI por key — estable entre deploys, solo cambia si añadimos planes nuevos
+// al catálogo de la tienda. Precio y nombre vienen de Supabase; esto es solo estructura UI.
+const METADATA_POR_KEY: Record<string, Omit<PlanBase, 'key' | 'nombre' | 'precioBase'>> = Object.fromEntries(
+  PLANES_BASE.map(({ key: _k, nombre: _n, precioBase: _p, ...meta }) => [_k, meta])
+)
+
+/**
+ * Carga los planes base desde Supabase `planes_tipo`.
+ * Solo incluye planes que tengan metadatos UI definidos en METADATA_POR_KEY
+ * (los planes internos como ALIMENTACION_ADULTO no aparecen en la tienda).
+ * Fallback a PLANES_BASE hardcoded si Supabase falla.
+ */
+export async function cargarPlanesBase(): Promise<PlanBase[]> {
+  try {
+    const { data, error } = await supabase
+      .from('planes_tipo')
+      .select('key, nombre, descripcion, precio_base')
+      .eq('activo', true)
+      .order('orden', { ascending: true })
+
+    if (error || !data || data.length === 0) {
+      console.warn('[Tienda] Fallback a PLANES_BASE hardcoded:', error?.message ?? 'sin datos')
+      return PLANES_BASE as unknown as PlanBase[]
+    }
+
+    const planes: PlanBase[] = []
+    for (const p of data) {
+      const meta = METADATA_POR_KEY[p.key]
+      if (!meta) continue // plan no publicado en tienda
+      planes.push({
+        ...meta,
+        key: p.key,
+        nombre: p.nombre,
+        descripcion: p.descripcion ?? meta.descripcion,
+        precioBase: Number(p.precio_base) || 0,
+      })
+    }
+
+    return planes.length > 0 ? planes : (PLANES_BASE as unknown as PlanBase[])
+  } catch (err: any) {
+    console.error('[Tienda] Error cargando planes desde Supabase:', err?.message)
+    return PLANES_BASE as unknown as PlanBase[]
+  }
+}
 
 // Plan con precios calculados
 export type PlanConPrecio = PlanBase & {
@@ -104,18 +160,23 @@ export async function obtenerDescuentosPorPlan(): Promise<Record<string, number>
       return {}
     }
 
+    console.log('[Tienda] Datos crudos de Supabase:', data)
+
     const descuentos: Record<string, number> = {}
     for (const row of data) {
       // Formato: DESCUENTO_PLAN_KEY -> extraer PLAN_KEY
       const match = row.clave.match(/^DESCUENTO_(.+)$/)
       if (match) {
         const planKey = match[1]
+        // Ignorar el descuento general viejo
+        if (planKey === 'WEB_PORCENTAJE') continue
         const valor = parseInt(row.valor, 10)
         if (!isNaN(valor)) {
           descuentos[planKey] = valor
         }
       }
     }
+    console.log('[Tienda] Descuentos por plan:', descuentos)
     return descuentos
   } catch (err) {
     console.error('Error obteniendo descuentos:', err)
@@ -123,51 +184,27 @@ export async function obtenerDescuentosPorPlan(): Promise<Record<string, number>
   }
 }
 
-// Obtiene descuento general (fallback para planes sin descuento específico)
-export async function obtenerDescuentoWeb(): Promise<number> {
-  try {
-    const { data, error } = await supabase
-      .from('configuracion_precios')
-      .select('valor')
-      .eq('clave', 'DESCUENTO_WEB_PORCENTAJE')
-      .single()
-
-    if (error || !data) {
-      console.warn('No se pudo obtener descuento, usando 10% por defecto:', error)
-      return 10 // Valor por defecto
-    }
-
-    const descuento = parseInt(data.valor, 10)
-    return isNaN(descuento) ? 10 : descuento
-  } catch (err) {
-    console.error('Error obteniendo descuento:', err)
-    return 10 // Valor por defecto
-  }
-}
-
-// Calcula los planes con descuentos por plan (solo adultos)
+// Calcula los planes con descuentos individuales por plan
 export function calcularPlanesConDescuentos(
   descuentosPorPlan: Record<string, number>,
-  descuentoGeneral: number
+  planesBase: PlanBase[] = PLANES_BASE as unknown as PlanBase[]
 ): PlanConPrecio[] {
-  return PLANES_BASE.map((plan) => {
-    // Buscar descuento específico del plan, sino usar el general
-    const descuento = descuentosPorPlan[plan.key] ?? descuentoGeneral
+  const planes = planesBase.map((plan) => {
+    // Buscar descuento específico del plan (0 si no tiene)
+    const descuento = descuentosPorPlan[plan.key] ?? 0
+    const precioWeb = descuento > 0
+      ? Math.round(plan.precioBase * (1 - descuento / 100))
+      : plan.precioBase
+
+    console.log(`[Tienda] ${plan.key}: base=${plan.precioBase}, descuento=${descuento}%, web=${precioWeb}`)
 
     return {
       ...plan,
       precioNormal: plan.precioBase,
-      // Descuento solo aplica para planes de adulto, no para infantil/niño
-      precioWeb: plan.categoria === 'adulto'
-        ? Math.round(plan.precioBase * (1 - descuento / 100))
-        : plan.precioBase,
+      precioWeb,
     }
   })
-}
-
-// Función legacy para compatibilidad
-export function calcularPlanesConDescuento(descuentoPorcentaje: number): PlanConPrecio[] {
-  return calcularPlanesConDescuentos({}, descuentoPorcentaje)
+  return planes
 }
 
 // Filtra planes por tipo

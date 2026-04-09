@@ -234,6 +234,10 @@ export default function TiendaPage() {
     setBoldReady(false)
   }
 
+  // Determinar qué tabs tienen planes disponibles
+  const hayPasadia = planes.some(p => p.tipo === 'pasadia')
+  const hayAlojamiento = planes.some(p => p.tipo === 'alojamiento')
+
   // Filtrar planes por tab activo
   const planesDelTab = useMemo(() => filtrarPlanesPorTipo(planes, tabActivo), [planes, tabActivo])
   const planesAdulto = planesDelTab.filter(p => p.categoria === 'adulto')
@@ -275,7 +279,8 @@ export default function TiendaPage() {
       </section>
 
       <main className="max-w-4xl mx-auto px-4 py-8">
-        {/* Tabs de Pasadía / Alojamiento */}
+        {/* Tabs de Pasadía / Alojamiento — solo si ambas categorías tienen planes */}
+        {hayPasadia && hayAlojamiento && (
         <div className="flex justify-center mb-6">
           <div className="bg-white rounded-full p-1 shadow-md inline-flex">
             <button
@@ -302,6 +307,7 @@ export default function TiendaPage() {
             </button>
           </div>
         </div>
+        )}
 
         {cargandoPrecios ? (
           <div className="flex justify-center py-12">

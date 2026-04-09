@@ -90,24 +90,19 @@ export type PlanBase = {
 }
 export type PlanKey = string
 
-// Mapa de metadatos UI por key — estable entre deploys, solo cambia si añadimos planes nuevos
-// al catálogo de la tienda. Precio y nombre vienen de Supabase; esto es solo estructura UI.
-const METADATA_POR_KEY: Record<string, Omit<PlanBase, 'key' | 'nombre' | 'precioBase'>> = Object.fromEntries(
-  PLANES_BASE.map(({ key: _k, nombre: _n, precioBase: _p, ...meta }) => [_k, meta])
-)
-
 /**
  * Carga los planes base desde Supabase `planes_tipo`.
- * Solo incluye planes que tengan metadatos UI definidos en METADATA_POR_KEY
- * (los planes internos como ALIMENTACION_ADULTO no aparecen en la tienda).
+ * Solo incluye planes con visible_tienda=true y los metadatos de presentación
+ * (categoria, tipo, incluye) vienen de Supabase — controlados desde el admin.
  * Fallback a PLANES_BASE hardcoded si Supabase falla.
  */
 export async function cargarPlanesBase(): Promise<PlanBase[]> {
   try {
     const { data, error } = await supabase
       .from('planes_tipo')
-      .select('key, nombre, descripcion, precio_base')
+      .select('key, nombre, descripcion, precio_base, visible_tienda, categoria_tienda, tipo_tienda, incluye_tienda, destacado_tienda, edad_maxima')
       .eq('activo', true)
+      .eq('visible_tienda', true)
       .order('orden', { ascending: true })
 
     if (error || !data || data.length === 0) {
@@ -117,14 +112,17 @@ export async function cargarPlanesBase(): Promise<PlanBase[]> {
 
     const planes: PlanBase[] = []
     for (const p of data) {
-      const meta = METADATA_POR_KEY[p.key]
-      if (!meta) continue // plan no publicado en tienda
+      if (!p.categoria_tienda || !p.tipo_tienda) continue
       planes.push({
-        ...meta,
         key: p.key,
         nombre: p.nombre,
-        descripcion: p.descripcion ?? meta.descripcion,
+        descripcion: p.descripcion || '',
         precioBase: Number(p.precio_base) || 0,
+        categoria: p.categoria_tienda as CategoriaPlanes,
+        tipo: p.tipo_tienda as TipoPlan,
+        incluye: Array.isArray(p.incluye_tienda) ? p.incluye_tienda : [],
+        destacado: Boolean(p.destacado_tienda),
+        edadMaxima: p.edad_maxima ?? undefined,
       })
     }
 

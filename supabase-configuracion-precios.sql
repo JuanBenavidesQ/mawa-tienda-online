@@ -49,6 +49,19 @@ CREATE POLICY "Lectura publica de configuracion"
   FOR SELECT
   USING (true);
 
+-- Politica: Permitir INSERT desde el backend (clave anónima)
+CREATE POLICY "Insertar configuracion"
+  ON configuracion_precios
+  FOR INSERT
+  WITH CHECK (true);
+
+-- Politica: Permitir UPDATE desde el backend (clave anónima)
+CREATE POLICY "Actualizar configuracion"
+  ON configuracion_precios
+  FOR UPDATE
+  USING (true)
+  WITH CHECK (true);
+
 -- =====================================================
 -- INSTRUCCIONES PARA EL SUPERVISOR
 -- =====================================================

@@ -132,14 +132,6 @@ function ExitoContent() {
                 </span>
               </div>
             )}
-            {validoHasta && (
-              <div className="flex justify-between py-2">
-                <span className="text-gray-600">Valido hasta</span>
-                <span className="font-medium text-emerald-600 text-right text-sm">
-                  {formatearFecha(validoHasta)}
-                </span>
-              </div>
-            )}
           </div>
 
           {/* Instrucciones */}
@@ -151,7 +143,7 @@ function ExitoContent() {
               <li>1. Guarda o toma captura de este codigo</li>
               <li>2. Presentalo en la entrada de Mawa</li>
               <li>3. Recibiras tu manilla de acceso</li>
-              <li>4. Puedes usar tu codigo cualquier sabado, domingo o festivo dentro del periodo de validez</li>
+              <li>4. Puedes usar tu codigo cualquier sabado, domingo o festivo</li>
             </ul>
           </div>
 

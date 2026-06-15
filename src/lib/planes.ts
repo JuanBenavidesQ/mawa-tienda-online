@@ -12,12 +12,16 @@ export function generarCodigoVenta(): string {
 export type CategoriaPlanes = 'adulto' | 'infantil'
 export type TipoPlan = 'pasadia' | 'alojamiento'
 
-// Planes base (sin descuento aplicado)
+// Planes base (sin descuento aplicado).
+// NOTA: esto es solo FALLBACK. La fuente real es Supabase `planes_tipo`
+// (sincronizada desde el catálogo del backend). Estructura del relanzamiento:
+// Pacífico $60k (solo piscina) → Montaña $70k (solo puentes) → Travesía $80k
+// (piscina + puentes, destacado) → Plan Infantil $40k (sin descuento).
 export const PLANES_BASE = [
   // ===== PLANES PASADÍA =====
   {
     key: 'PACIFICO_PISCINA',
-    nombre: 'Pacífico - Piscina',
+    nombre: 'Pacífico',
     descripcion: 'Piscinas y toboganes + bebida de bienvenida + almuerzo + bebida + postre',
     precioBase: 60000,
     categoria: 'adulto' as CategoriaPlanes,
@@ -25,19 +29,19 @@ export const PLANES_BASE = [
     incluye: ['Piscinas y toboganes', 'Bebida de bienvenida', 'Almuerzo', 'Bebida', 'Postre'],
   },
   {
-    key: 'PACIFICO_PUENTES',
-    nombre: 'Pacífico - Puentes',
+    key: 'MONTANA',
+    nombre: 'Montaña',
     descripcion: 'Puentes tibetanos + bebida de bienvenida + almuerzo + bebida + postre',
-    precioBase: 60000,
+    precioBase: 70000,
     categoria: 'adulto' as CategoriaPlanes,
     tipo: 'pasadia' as TipoPlan,
     incluye: ['Puentes tibetanos', 'Bebida de bienvenida', 'Almuerzo', 'Bebida', 'Postre'],
   },
   {
     key: 'TRAVESIA',
-    nombre: 'Travesía Completa',
+    nombre: 'Travesía',
     descripcion: 'Piscinas y toboganes + Puentes tibetanos + bebida de bienvenida + almuerzo + bebida + postre',
-    precioBase: 70000,
+    precioBase: 80000,
     categoria: 'adulto' as CategoriaPlanes,
     tipo: 'pasadia' as TipoPlan,
     incluye: ['Piscinas y toboganes', 'Puentes tibetanos', 'Bebida de bienvenida', 'Almuerzo', 'Bebida', 'Postre'],

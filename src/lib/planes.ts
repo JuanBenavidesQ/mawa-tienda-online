@@ -24,6 +24,7 @@ export const PLANES_BASE = [
     nombre: 'Pacífico',
     descripcion: 'Piscinas y toboganes + bebida de bienvenida + almuerzo + bebida + postre',
     precioBase: 60000,
+    precioWeb: 57000,
     categoria: 'adulto' as CategoriaPlanes,
     tipo: 'pasadia' as TipoPlan,
     incluye: ['Piscinas y toboganes', 'Bebida de bienvenida', 'Almuerzo', 'Bebida', 'Postre'],
@@ -33,6 +34,7 @@ export const PLANES_BASE = [
     nombre: 'Montaña',
     descripcion: 'Puentes tibetanos + bebida de bienvenida + almuerzo + bebida + postre',
     precioBase: 70000,
+    precioWeb: 66500,
     categoria: 'adulto' as CategoriaPlanes,
     tipo: 'pasadia' as TipoPlan,
     incluye: ['Puentes tibetanos', 'Bebida de bienvenida', 'Almuerzo', 'Bebida', 'Postre'],
@@ -42,6 +44,7 @@ export const PLANES_BASE = [
     nombre: 'Travesía',
     descripcion: 'Piscinas y toboganes + Puentes tibetanos + bebida de bienvenida + almuerzo + bebida + postre',
     precioBase: 80000,
+    precioWeb: 76000,
     categoria: 'adulto' as CategoriaPlanes,
     tipo: 'pasadia' as TipoPlan,
     incluye: ['Piscinas y toboganes', 'Puentes tibetanos', 'Bebida de bienvenida', 'Almuerzo', 'Bebida', 'Postre'],
@@ -86,6 +89,7 @@ export type PlanBase = {
   nombre: string
   descripcion: string
   precioBase: number
+  precioWeb?: number // precio final con descuento (tab Planes del admin); null/0 => sin descuento
   categoria: CategoriaPlanes
   tipo: TipoPlan
   incluye: string[]
@@ -104,7 +108,7 @@ export async function cargarPlanesBase(): Promise<PlanBase[]> {
   try {
     const { data, error } = await supabase
       .from('planes_tipo')
-      .select('key, nombre, descripcion, precio_base, visible_tienda, categoria_tienda, tipo_tienda, incluye_tienda, destacado_tienda, edad_maxima')
+      .select('key, nombre, descripcion, precio_base, precio_web, visible_tienda, categoria_tienda, tipo_tienda, incluye_tienda, destacado_tienda, edad_maxima')
       .eq('activo', true)
       .eq('visible_tienda', true)
       .order('orden', { ascending: true })
@@ -122,6 +126,7 @@ export async function cargarPlanesBase(): Promise<PlanBase[]> {
         nombre: p.nombre,
         descripcion: p.descripcion || '',
         precioBase: Number(p.precio_base) || 0,
+        precioWeb: p.precio_web != null ? Number(p.precio_web) : undefined,
         categoria: p.categoria_tienda as CategoriaPlanes,
         tipo: p.tipo_tienda as TipoPlan,
         incluye: Array.isArray(p.incluye_tienda) ? p.incluye_tienda : [],
@@ -149,64 +154,23 @@ export type SeleccionPlan = {
   cantidad: number
 }
 
-// Obtiene los descuentos por plan desde Supabase
-export async function obtenerDescuentosPorPlan(): Promise<Record<string, number>> {
-  try {
-    const { data, error } = await supabase
-      .from('configuracion_precios')
-      .select('clave, valor')
-      .like('clave', 'DESCUENTO_%')
-
-    if (error || !data) {
-      console.warn('No se pudieron obtener descuentos:', error)
-      return {}
-    }
-
-    console.log('[Tienda] Datos crudos de Supabase:', data)
-
-    const descuentos: Record<string, number> = {}
-    for (const row of data) {
-      // Formato: DESCUENTO_PLAN_KEY -> extraer PLAN_KEY
-      const match = row.clave.match(/^DESCUENTO_(.+)$/)
-      if (match) {
-        const planKey = match[1]
-        // Ignorar el descuento general viejo
-        if (planKey === 'WEB_PORCENTAJE') continue
-        const valor = parseInt(row.valor, 10)
-        if (!isNaN(valor)) {
-          descuentos[planKey] = valor
-        }
-      }
-    }
-    console.log('[Tienda] Descuentos por plan:', descuentos)
-    return descuentos
-  } catch (err) {
-    console.error('Error obteniendo descuentos:', err)
-    return {}
-  }
-}
-
-// Calcula los planes con descuentos individuales por plan
-export function calcularPlanesConDescuentos(
-  descuentosPorPlan: Record<string, number>,
+// Aplica el precio web (con descuento) definido por plan en el catálogo.
+// FUENTE ÚNICA DE VERDAD: precio_base + precio_web del plan (tab "Planes" del
+// admin, sincronizado a Supabase planes_tipo). Si precio_web está vacío, es 0,
+// o no es menor que el base => el plan se muestra sin descuento.
+// (Se retiró configuracion_precios/DESCUENTO_ como fuente para evitar doble verdad.)
+export function aplicarPreciosWeb(
   planesBase: PlanBase[] = PLANES_BASE as unknown as PlanBase[]
 ): PlanConPrecio[] {
-  const planes = planesBase.map((plan) => {
-    // Buscar descuento específico del plan (0 si no tiene)
-    const descuento = descuentosPorPlan[plan.key] ?? 0
-    const precioWeb = descuento > 0
-      ? Math.round(plan.precioBase * (1 - descuento / 100))
-      : plan.precioBase
-
-    console.log(`[Tienda] ${plan.key}: base=${plan.precioBase}, descuento=${descuento}%, web=${precioWeb}`)
-
+  return planesBase.map((plan) => {
+    const web = plan.precioWeb
+    const precioWeb = web && web > 0 && web < plan.precioBase ? web : plan.precioBase
     return {
       ...plan,
       precioNormal: plan.precioBase,
       precioWeb,
     }
   })
-  return planes
 }
 
 // Filtra planes por tipo

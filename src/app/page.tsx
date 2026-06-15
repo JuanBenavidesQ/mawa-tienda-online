@@ -4,9 +4,8 @@ import { useState, useMemo, useEffect, useCallback } from 'react'
 import {
   formatCOP,
   generarCodigoVenta,
-  obtenerDescuentosPorPlan,
   cargarPlanesBase,
-  calcularPlanesConDescuentos,
+  aplicarPreciosWeb,
   calcularTotalCarrito,
   filtrarPlanesPorTipo,
   esFechaValidaAlojamiento,
@@ -58,11 +57,8 @@ export default function TiendaPage() {
   useEffect(() => {
     async function cargarTodo() {
       setCargandoPrecios(true)
-      const [descuentosPorPlan, planesBase] = await Promise.all([
-        obtenerDescuentosPorPlan(),
-        cargarPlanesBase(),
-      ])
-      setPlanes(calcularPlanesConDescuentos(descuentosPorPlan, planesBase))
+      const planesBase = await cargarPlanesBase()
+      setPlanes(aplicarPreciosWeb(planesBase))
       setCargandoPrecios(false)
     }
     cargarTodo()

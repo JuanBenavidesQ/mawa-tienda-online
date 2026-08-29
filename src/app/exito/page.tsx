@@ -15,39 +15,51 @@ function ExitoContent() {
   const fechaVisita = fechaVisitaStr ? new Date(fechaVisitaStr) : null
   const validoHasta = validoHastaStr ? new Date(validoHastaStr) : null
 
-  const [confirmandoPago, setConfirmandoPago] = useState(true)
-  const [pagoConfirmado, setPagoConfirmado] = useState(false)
+  // Estado del pago según el BACKEND (webhook de Bold), no según este navegador.
+  // Esta página es SOLO-LECTURA: quien marca el código como pagado es el webhook
+  // SALE_APPROVED de Bold en el backend. Aquí solo consultamos hasta verlo
+  // confirmado (o nos rendimos a los 60s y mostramos "en verificación" — el
+  // código se activa igual por el webhook o la reconciliación del sync).
+  const [estadoPago, setEstadoPago] = useState<'consultando' | 'confirmado' | 'verificando'>('consultando')
 
-  // Actualizar estado del código a PENDIENTE (pagado) cuando llega desde Bold
   useEffect(() => {
-    async function confirmarPago() {
-      if (!codigo || codigo === 'MAWA-XXXXXX') {
-        setConfirmandoPago(false)
-        return
-      }
+    if (!codigo || codigo === 'MAWA-XXXXXX') {
+      setEstadoPago('verificando')
+      return
+    }
 
+    let cancelado = false
+    const inicio = Date.now()
+
+    async function consultarEstado() {
       try {
-        // Actualizar el estado de PENDIENTE_PAGO a PENDIENTE (pagado, listo para canjear)
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from('codigos_plan')
-          .update({
-            estado: 'PENDIENTE',
-            referencia_pago: `BOLD_${new Date().toISOString()}`,
-          })
+          .select('estado')
           .eq('codigo', codigo)
-          .eq('estado', 'PENDIENTE_PAGO')
+          .maybeSingle()
 
-        if (!error) {
-          setPagoConfirmado(true)
+        if (cancelado) return
+        if (!error && data && data.estado !== 'PENDIENTE_PAGO') {
+          setEstadoPago('confirmado')
+          return
         }
       } catch (err) {
-        console.error('Error confirmando pago:', err)
-      } finally {
-        setConfirmandoPago(false)
+        console.error('Error consultando estado del pago:', err)
+      }
+
+      if (cancelado) return
+      if (Date.now() - inicio < 60_000) {
+        setTimeout(consultarEstado, 4000)
+      } else {
+        setEstadoPago('verificando')
       }
     }
 
-    confirmarPago()
+    consultarEstado()
+    return () => {
+      cancelado = true
+    }
   }, [codigo])
 
   const formatearFecha = (fecha: Date) => {
@@ -60,7 +72,7 @@ function ExitoContent() {
   }
 
   // Mostrar loading mientras se confirma el pago
-  if (confirmandoPago) {
+  if (estadoPago === 'consultando') {
     return (
       <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex flex-col">
         <header className="bg-emerald-800 text-white py-3">
@@ -100,9 +112,19 @@ function ExitoContent() {
           <h2 className="text-2xl font-bold text-gray-800 mb-2">
             Compra Exitosa
           </h2>
-          <p className="text-gray-600 mb-8">
-            Tu entrada a Mawa esta confirmada
-          </p>
+          {estadoPago === 'confirmado' ? (
+            <p className="text-gray-600 mb-8">
+              Tu entrada a Mawa esta confirmada
+            </p>
+          ) : (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-8 text-left">
+              <p className="text-sm text-amber-800">
+                Tu pago esta siendo verificado con el banco. Tu codigo quedara
+                activo automaticamente en unos minutos — guardalo y presentalo
+                en la entrada con toda confianza.
+              </p>
+            </div>
+          )}
 
           {/* Codigo */}
           <div className="bg-emerald-50 rounded-2xl p-6 mb-6">

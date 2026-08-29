@@ -3,7 +3,6 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import {
   formatCOP,
-  generarCodigoVenta,
   cargarPlanesBase,
   aplicarPreciosWeb,
   calcularTotalCarrito,
@@ -12,7 +11,6 @@ import {
   PlanConPrecio,
   TipoPlan,
 } from '@/lib/planes'
-import { supabase } from '@/lib/supabase'
 import {
   obtenerFechasDisponibles,
   calcularFechaVencimiento,
@@ -47,6 +45,9 @@ export default function TiendaPage() {
   // Estados para Bold
   const [ordenConfirmada, setOrdenConfirmada] = useState(false)
   const [codigoOrden, setCodigoOrden] = useState('')
+  // Total calculado por el SERVIDOR al crear la orden: es el monto que se le
+  // pasa a Bold (y sobre el que se firmó el hash), no el total del navegador.
+  const [ordenTotal, setOrdenTotal] = useState(0)
   const [integrityHash, setIntegrityHash] = useState('')
   const [boldReady, setBoldReady] = useState(false)
 
@@ -123,66 +124,34 @@ export default function TiendaPage() {
     setError('')
 
     try {
-      const codigo = generarCodigoVenta()
-      const vencimiento = calcularFechaVencimiento(fechaVisita)
+      // La orden se crea SERVER-SIDE: el servidor calcula el precio desde el
+      // catálogo (el navegador solo dice qué planes y cuántos), inserta el
+      // código con el service role y devuelve el hash de integridad de Bold
+      // firmado sobre el total real.
+      const resp = await fetch('/api/ordenes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          selecciones,
+          fechaVisita: fechaVisita.toISOString(),
+          nombre: formData.nombre,
+          celular: formData.celular,
+          email: formData.email,
+          aceptaPolitica: formData.aceptaPolitica,
+          aceptaMarketing: formData.aceptaMarketing,
+        }),
+      })
 
-      // Crear descripción del pedido
-      const descripcionPlanes = totales.detalle
-        .map(d => `${d.cantidad}x ${d.nombre}`)
-        .join(', ')
-
-      // Crear el codigo en Supabase como PENDIENTE_PAGO
-      const { error: dbError } = await supabase
-        .from('codigos_plan')
-        .insert({
-          codigo,
-          plan_tipo_key: totales.detalle.length === 1 ? totales.detalle[0].key : 'MULTIPLE',
-          plan_nombre: descripcionPlanes,
-          monto: totales.total,
-          cliente_nombre: formData.nombre.toUpperCase(),
-          cliente_celular: formData.celular,
-          cliente_email: formData.email || null,
-          num_personas: totales.cantidadPersonas,
-          fecha_venta: new Date().toISOString(),
-          fecha_visita: fechaVisita.toISOString(),
-          valido_hasta: vencimiento.toISOString(),
-          estado: 'PENDIENTE_PAGO',
-          agente_nombre: 'VENTA_WEB',
-          metodo_pago: 'BOLD_ONLINE',
-          tipo_venta: 'WEB',
-          sincronizado_local: false,
-          notas: JSON.stringify(totales.detalle),
-          acepta_politica: formData.aceptaPolitica,
-          acepta_marketing: formData.aceptaMarketing,
-        })
-
-      if (dbError) throw dbError
-
-      // Obtener hash de integridad desde API local
-      try {
-        const hashResponse = await fetch('/api/bold/integrity-hash', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderId: codigo,
-            amount: totales.total,
-            currency: 'COP',
-          }),
-        })
-
-        if (hashResponse.ok) {
-          const hashData = await hashResponse.json()
-          if (hashData.ok && hashData.hash) {
-            setIntegrityHash(hashData.hash)
-          }
-        }
-      } catch (hashErr) {
-        console.warn('No se pudo obtener hash de integridad:', hashErr)
-        // Continuar sin hash (Bold podría rechazarlo)
+      const data = await resp.json().catch(() => null)
+      if (!resp.ok || !data?.ok) {
+        setError(data?.error || 'Error al procesar la compra. Intenta de nuevo.')
+        return
       }
 
-      // Guardar codigo y mostrar botón de Bold
-      setCodigoOrden(codigo)
+      // Guardar codigo y monto del SERVIDOR, y mostrar botón de Bold
+      setCodigoOrden(data.codigo)
+      setOrdenTotal(data.total)
+      setIntegrityHash(data.hash || '')
       setOrdenConfirmada(true)
     } catch (err: any) {
       console.error('Error:', err)
@@ -214,18 +183,19 @@ export default function TiendaPage() {
     return `${baseUrl}/exito?${params.toString()}`
   }, [codigoOrden, fechaVisita, totales])
 
-  // Cancelar y volver a editar
+  // Cancelar y volver a editar. La eliminación va por el servidor (solo borra
+  // órdenes web SIN pagar); best-effort — si falla, la reconciliación la expira.
   const handleCancelarOrden = async () => {
     if (codigoOrden) {
-      // Eliminar la orden pendiente de Supabase
-      await supabase
-        .from('codigos_plan')
-        .delete()
-        .eq('codigo', codigoOrden)
-        .eq('estado', 'PENDIENTE_PAGO')
+      try {
+        await fetch(`/api/ordenes?codigo=${encodeURIComponent(codigoOrden)}`, { method: 'DELETE' })
+      } catch {
+        // La orden quedará PENDIENTE_PAGO y expira sola a las 48h.
+      }
     }
     setOrdenConfirmada(false)
     setCodigoOrden('')
+    setOrdenTotal(0)
     setIntegrityHash('')
     setBoldReady(false)
   }
@@ -680,7 +650,7 @@ export default function TiendaPage() {
                         <div className="flex flex-col items-center">
                           <BoldPayButton
                             apiKey={BOLD_API_KEY}
-                            amount={totales.total}
+                            amount={ordenTotal || totales.total}
                             orderId={codigoOrden}
                             description={`Mawa - ${totales.detalle.map(d => `${d.cantidad}x ${d.nombre}`).join(', ')}`}
                             integrityHash={integrityHash}

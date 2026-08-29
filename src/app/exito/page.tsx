@@ -2,7 +2,6 @@
 
 import { useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
 
 function ExitoContent() {
   const searchParams = useSearchParams()
@@ -33,14 +32,13 @@ function ExitoContent() {
 
     async function consultarEstado() {
       try {
-        const { data, error } = await supabase
-          .from('codigos_plan')
-          .select('estado')
-          .eq('codigo', codigo)
-          .maybeSingle()
+        // Consulta vía API route del servidor (el anon key ya no puede leer
+        // codigos_plan tras el lockdown de RLS).
+        const resp = await fetch(`/api/ordenes/estado?codigo=${encodeURIComponent(codigo)}`)
+        const data = resp.ok ? await resp.json().catch(() => null) : null
 
         if (cancelado) return
-        if (!error && data && data.estado !== 'PENDIENTE_PAGO') {
+        if (data?.ok && data.estado && data.estado !== 'PENDIENTE_PAGO') {
           setEstadoPago('confirmado')
           return
         }

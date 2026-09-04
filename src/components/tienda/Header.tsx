@@ -24,17 +24,23 @@ export default function Header({ solido = false }: Props) {
           </span>
         </Link>
         <nav className="flex items-center gap-2 sm:gap-4 text-sm font-semibold">
-          <Link href="/#planes" className="hidden sm:inline hover:text-mawa-crema transition-colors">Planes</Link>
           <Link href="/#faq" className="hidden sm:inline hover:text-mawa-crema transition-colors">Preguntas</Link>
           <a
             href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 bg-whatsapp hover:bg-[#1ebe5b] text-white rounded-full px-4 py-2 transition-colors shadow"
+            aria-label="Escríbenos por WhatsApp"
+            className="inline-flex items-center gap-2 bg-whatsapp hover:bg-[#1ebe5b] text-white rounded-full p-2.5 sm:px-4 sm:py-2 transition-colors shadow"
           >
             <IconoWhatsApp className="w-4 h-4" />
-            <span>WhatsApp</span>
+            <span className="hidden sm:inline">WhatsApp</span>
           </a>
+          <Link
+            href="/#planes"
+            className="inline-flex items-center gap-2 bg-mawa-gradient text-white rounded-full px-4 py-2 sm:px-5 shadow hover:brightness-110 transition"
+          >
+            Comprar entradas
+          </Link>
         </nav>
       </div>
     </header>

@@ -1,5 +1,5 @@
 import { FAQS } from '@/lib/contenido'
-import { WHATSAPP_URL } from '@/lib/site'
+import { WHATSAPP_URL, WHATSAPP_VISIBLE } from '@/lib/site'
 import { IconoWhatsApp } from './Iconos'
 
 export default function Faq() {
@@ -34,7 +34,7 @@ export default function Faq() {
           className="inline-flex items-center justify-center gap-2 bg-whatsapp hover:bg-[#1ebe5b] text-white font-semibold rounded-full px-6 py-3 transition-colors"
         >
           <IconoWhatsApp />
-          316 399 6541
+          {WHATSAPP_VISIBLE}
         </a>
       </div>
     </section>

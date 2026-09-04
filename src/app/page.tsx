@@ -14,8 +14,8 @@ export default function TiendaPage() {
       <Header />
       <main>
         <Hero />
-        <Experiencias />
         <Comprar />
+        <Experiencias />
         <ComoFunciona />
         <Faq />
         <Galeria />

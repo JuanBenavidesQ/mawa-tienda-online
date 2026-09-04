@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { EXPERIENCIAS } from '@/lib/contenido'
+import { IconoFlecha } from './Iconos'
 
 export default function Experiencias() {
   return (
@@ -31,6 +32,16 @@ export default function Experiencias() {
             </div>
           </article>
         ))}
+      </div>
+
+      <div className="mt-10 flex justify-center">
+        <a
+          href="#planes"
+          className="inline-flex items-center gap-2 bg-mawa-verde-700 hover:bg-mawa-verde-900 text-white font-bold rounded-full px-8 py-4 transition-colors shadow-lg shadow-mawa-verde-900/20"
+        >
+          Comprar mis entradas con descuento
+          <IconoFlecha className="w-5 h-5 rotate-180" />
+        </a>
       </div>
     </section>
   )

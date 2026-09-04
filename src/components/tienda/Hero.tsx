@@ -6,12 +6,12 @@ export default function Hero() {
   return (
     <section className="relative min-h-[680px] sm:min-h-[80vh] flex items-end text-white overflow-hidden bg-mawa-verde-950">
       <Image
-        src="/fotos/hero-piscina-1280.webp"
-        alt="Vista aérea de las piscinas y toboganes de Mawá entre la montaña"
+        src="/fotos/aerea-hotel-1920.webp"
+        alt="Vista aérea de Mawá: piscinas, restaurante y hotel en medio de la montaña"
         fill
         priority
         sizes="100vw"
-        className="object-cover object-[50%_45%]"
+        className="object-cover object-[50%_60%]"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-mawa-verde-950 via-mawa-verde-950/55 to-black/20" />
 
@@ -33,7 +33,7 @@ export default function Hero() {
             href="#planes"
             className="inline-flex items-center justify-center gap-2 bg-mawa-gradient text-white font-bold text-lg rounded-full px-8 py-4 shadow-lg shadow-black/30 hover:brightness-110 transition"
           >
-            Ver planes y comprar
+            Comprar entradas
             <IconoFlecha className="w-5 h-5" />
           </a>
           <span className="text-sm text-white/80 sm:ml-2">Desde $40.000 por persona</span>

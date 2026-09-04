@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { LUGAR } from '@/lib/contenido'
-import { WHATSAPP_URL } from '@/lib/site'
+import { WHATSAPP_URL, WHATSAPP_VISIBLE } from '@/lib/site'
 import { IconoInstagram, IconoPin, IconoReloj, IconoWhatsApp } from './Iconos'
 
 export default function Footer() {
@@ -21,7 +21,7 @@ export default function Footer() {
         </div>
         <div className="text-sm space-y-3">
           <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white">
-            <IconoWhatsApp className="w-4 h-4 text-mawa-verde-400" /> 316 399 6541
+            <IconoWhatsApp className="w-4 h-4 text-mawa-verde-400" /> {WHATSAPP_VISIBLE}
           </a>
           <a href={LUGAR.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-white">
             <IconoInstagram className="w-4 h-4 text-mawa-verde-400" /> {LUGAR.instagramUsuario}

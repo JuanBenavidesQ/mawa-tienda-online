@@ -1,5 +1,6 @@
 import { customAlphabet } from 'nanoid'
 import { supabase } from './supabase'
+import { FESTIVOS_2026, fechaLocalISO } from './fechas'
 
 // Genera código tipo MAWA-ABC123 (6 caracteres alfanuméricos)
 const generateId = customAlphabet('ABCDEFGHJKLMNPQRSTUVWXYZ23456789', 6)
@@ -178,46 +179,7 @@ export function filtrarPlanesPorTipo(planes: PlanConPrecio[], tipo: TipoPlan): P
   return planes.filter((plan) => plan.tipo === tipo)
 }
 
-// Festivos Colombia 2025-2026 (lunes festivos y otros)
-// Formato: 'YYYY-MM-DD'
-export const FESTIVOS_COLOMBIA: string[] = [
-  // 2025
-  '2025-01-06', // Reyes Magos
-  '2025-03-24', // San José
-  '2025-04-17', // Jueves Santo
-  '2025-04-18', // Viernes Santo
-  '2025-05-01', // Día del Trabajo
-  '2025-06-02', // Ascensión
-  '2025-06-23', // Corpus Christi
-  '2025-06-30', // Sagrado Corazón
-  '2025-07-20', // Independencia
-  '2025-08-07', // Batalla de Boyacá
-  '2025-08-18', // Asunción
-  '2025-10-13', // Día de la Raza
-  '2025-11-03', // Todos los Santos
-  '2025-11-17', // Independencia Cartagena
-  '2025-12-08', // Inmaculada Concepción
-  '2025-12-25', // Navidad
-  // 2026
-  '2026-01-01', // Año Nuevo
-  '2026-01-12', // Reyes Magos
-  '2026-03-23', // San José
-  '2026-04-02', // Jueves Santo
-  '2026-04-03', // Viernes Santo
-  '2026-05-01', // Día del Trabajo
-  '2026-05-18', // Ascensión
-  '2026-06-08', // Corpus Christi
-  '2026-06-15', // Sagrado Corazón
-  '2026-06-29', // San Pedro y San Pablo
-  '2026-07-20', // Independencia
-  '2026-08-07', // Batalla de Boyacá
-  '2026-08-17', // Asunción
-  '2026-10-12', // Día de la Raza
-  '2026-11-02', // Todos los Santos
-  '2026-11-16', // Independencia Cartagena
-  '2026-12-08', // Inmaculada Concepción
-  '2026-12-25', // Navidad
-]
+// Festivos: única fuente en fechas.ts (FESTIVOS_2026)
 
 // Verifica si un domingo es parte de un puente festivo (lunes festivo)
 export function esPuenteFestivo(fecha: Date): boolean {
@@ -225,8 +187,7 @@ export function esPuenteFestivo(fecha: Date): boolean {
   if (fecha.getDay() === 0) {
     const lunes = new Date(fecha)
     lunes.setDate(lunes.getDate() + 1)
-    const lunesStr = lunes.toISOString().split('T')[0]
-    return FESTIVOS_COLOMBIA.includes(lunesStr)
+    return FESTIVOS_2026.includes(fechaLocalISO(lunes))
   }
   return false
 }

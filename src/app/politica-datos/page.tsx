@@ -13,7 +13,7 @@ export default function PoliticaDatosPage() {
         <div className="max-w-4xl mx-auto px-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/LogoMawaVerde.jpg" alt="Mawa" className="h-10 w-auto rounded" />
-            <span className="font-bold text-xl">MAWA</span>
+            <span className="font-bold text-xl">MAWÁ</span>
           </Link>
         </div>
       </header>
@@ -25,40 +25,40 @@ export default function PoliticaDatosPage() {
           <div className="text-center mb-8 pb-6 border-b">
             <p className="text-gray-600 font-medium">MAXIMIZA S.A.S.</p>
             <p className="text-gray-500">NIT 900.490.382-4</p>
-            <p className="text-gray-500">Nombre comercial: Mawa</p>
+            <p className="text-gray-500">Nombre comercial: Mawá</p>
             <h1 className="text-2xl font-bold text-gray-800 mt-4">
-              POLITICA DE TRATAMIENTO Y PROTECCION DE DATOS PERSONALES
+              POLÍTICA DE TRATAMIENTO Y PROTECCIÓN DE DATOS PERSONALES
             </h1>
             <p className="text-sm text-gray-500 mt-2">
-              En cumplimiento de la Ley Estatutaria 1581 de 2012, el Decreto Reglamentario 1377 de 2013 y demas normas concordantes
+              En cumplimiento de la Ley Estatutaria 1581 de 2012, el Decreto Reglamentario 1377 de 2013 y demás normas concordantes
             </p>
             <p className="text-sm text-emerald-600 mt-4">www.mawa.com.co</p>
             <p className="text-sm text-gray-500">Fecha de entrada en vigencia: febrero de 2026</p>
-            <p className="text-sm text-gray-500">Version 1.0</p>
+            <p className="text-sm text-gray-500">Versión 1.0</p>
           </div>
 
           <div className="prose prose-emerald max-w-none text-gray-700 space-y-6">
             {/* Sección 1 */}
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
-                1. IDENTIFICACION DEL RESPONSABLE DEL TRATAMIENTO
+                1. IDENTIFICACIÓN DEL RESPONSABLE DEL TRATAMIENTO
               </h2>
               <p>
-                MAXIMIZA S.A.S., sociedad comercial identificada con NIT 900.490.382-4, que opera bajo el nombre comercial Mawa, es la persona juridica responsable del tratamiento de los datos personales recolectados a traves de sus canales fisicos y digitales.
+                MAXIMIZA S.A.S., sociedad comercial identificada con NIT 900.490.382-4, que opera bajo el nombre comercial Mawá, es la persona jurídica responsable del tratamiento de los datos personales recolectados a través de sus canales físicos y digitales.
               </p>
               <div className="overflow-x-auto mt-4">
                 <table className="min-w-full border border-gray-200 text-sm">
                   <tbody>
-                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Razon social</td><td className="px-4 py-2">MAXIMIZA S.A.S.</td></tr>
+                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Razón social</td><td className="px-4 py-2">MAXIMIZA S.A.S.</td></tr>
                     <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">NIT</td><td className="px-4 py-2">900.490.382-4</td></tr>
-                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Nombre comercial</td><td className="px-4 py-2">Mawa</td></tr>
-                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Domicilio</td><td className="px-4 py-2">Km. 37,5 Via Ipiales - Pasto</td></tr>
-                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Ciudad / Departamento</td><td className="px-4 py-2">Iles, Narino</td></tr>
-                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Telefono</td><td className="px-4 py-2">3163996541</td></tr>
-                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Correo electronico de contacto</td><td className="px-4 py-2">eventos@mawa.com.co</td></tr>
+                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Nombre comercial</td><td className="px-4 py-2">Mawá</td></tr>
+                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Domicilio</td><td className="px-4 py-2">Km. 37,5 Vía Ipiales - Pasto</td></tr>
+                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Ciudad / Departamento</td><td className="px-4 py-2">Iles, Nariño</td></tr>
+                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Teléfono</td><td className="px-4 py-2">3163996541</td></tr>
+                    <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Correo electrónico de contacto</td><td className="px-4 py-2">eventos@mawa.com.co</td></tr>
                     <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Correo para PQR de datos</td><td className="px-4 py-2">contacto@mawa.com.co</td></tr>
                     <tr className="border-b"><td className="px-4 py-2 font-medium bg-gray-50">Sitio web</td><td className="px-4 py-2">www.mawa.com.co</td></tr>
-                    <tr><td className="px-4 py-2 font-medium bg-gray-50">Actividad economica</td><td className="px-4 py-2">Servicios de hotel, restaurante y actividades de recreacion</td></tr>
+                    <tr><td className="px-4 py-2 font-medium bg-gray-50">Actividad económica</td><td className="px-4 py-2">Servicios de hotel, restaurante y actividades de recreación</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -69,15 +69,15 @@ export default function PoliticaDatosPage() {
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
                 2. MARCO LEGAL
               </h2>
-              <p>La presente politica se rige por la normatividad colombiana vigente en materia de proteccion de datos personales, principalmente:</p>
+              <p>La presente política se rige por la normatividad colombiana vigente en materia de protección de datos personales, principalmente:</p>
               <ul className="list-disc pl-6 space-y-1 mt-2">
-                <li>Articulo 15 de la Constitucion Politica de Colombia (derecho al habeas data).</li>
-                <li>Ley Estatutaria 1581 de 2012 (Regimen General de Proteccion de Datos Personales).</li>
-                <li>Decreto Reglamentario 1377 de 2013 (compilado en el Decreto Unico 1074 de 2015).</li>
+                <li>Artículo 15 de la Constitución Política de Colombia (derecho al habeas data).</li>
+                <li>Ley Estatutaria 1581 de 2012 (Régimen General de Protección de Datos Personales).</li>
+                <li>Decreto Reglamentario 1377 de 2013 (compilado en el Decreto Único 1074 de 2015).</li>
                 <li>Decreto 886 de 2014 (Registro Nacional de Bases de Datos).</li>
-                <li>Decreto 090 de 2018 (modificacion del ambito de aplicacion del RNBD).</li>
+                <li>Decreto 090 de 2018 (modificación del ámbito de aplicación del RNBD).</li>
                 <li>Sentencias de la Corte Constitucional y circulares de la Superintendencia de Industria y Comercio (SIC) aplicables.</li>
-                <li>Guia sobre Proteccion de Datos Personales en Sistemas de Videovigilancia, expedida por la SIC.</li>
+                <li>Guía sobre Protección de Datos Personales en Sistemas de Videovigilancia, expedida por la SIC.</li>
               </ul>
             </section>
 
@@ -86,22 +86,22 @@ export default function PoliticaDatosPage() {
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
                 3. DEFINICIONES
               </h2>
-              <p>Para efectos de la presente politica, se adoptan las siguientes definiciones conforme a la Ley 1581 de 2012 y el Decreto 1377 de 2013:</p>
+              <p>Para efectos de la presente política, se adoptan las siguientes definiciones conforme a la Ley 1581 de 2012 y el Decreto 1377 de 2013:</p>
               <ul className="list-disc pl-6 space-y-2 mt-2">
-                <li><strong>Dato personal:</strong> Cualquier informacion vinculada o que pueda asociarse a una o varias personas naturales determinadas o determinables.</li>
-                <li><strong>Dato publico:</strong> Dato que la ley o la Constitucion han determinado como publico y cuya recopilacion no requiere autorizacion del titular (por ejemplo, nombre, profesion, estado civil).</li>
-                <li><strong>Dato semiprivado:</strong> Dato que no tiene naturaleza intima, reservada ni publica, y cuyo conocimiento interesa no solo al titular sino a cierto sector o grupo (por ejemplo, informacion financiera y crediticia).</li>
-                <li><strong>Dato privado:</strong> Dato que por su naturaleza intima o reservada solo es relevante para el titular (por ejemplo, direccion de residencia, telefono personal).</li>
-                <li><strong>Dato sensible:</strong> Dato que afecta la intimidad del titular o cuyo uso indebido puede generar discriminacion (por ejemplo, origen racial, convicciones religiosas, datos de salud, orientacion sexual, datos biometricos).</li>
+                <li><strong>Dato personal:</strong> Cualquier información vinculada o que pueda asociarse a una o varias personas naturales determinadas o determinables.</li>
+                <li><strong>Dato público:</strong> Dato que la ley o la Constitución han determinado como público y cuya recopilación no requiere autorización del titular (por ejemplo, nombre, profesión, estado civil).</li>
+                <li><strong>Dato semiprivado:</strong> Dato que no tiene naturaleza íntima, reservada ni pública, y cuyo conocimiento interesa no solo al titular sino a cierto sector o grupo (por ejemplo, información financiera y crediticia).</li>
+                <li><strong>Dato privado:</strong> Dato que por su naturaleza íntima o reservada solo es relevante para el titular (por ejemplo, dirección de residencia, teléfono personal).</li>
+                <li><strong>Dato sensible:</strong> Dato que afecta la intimidad del titular o cuyo uso indebido puede generar discriminación (por ejemplo, origen racial, convicciones religiosas, datos de salud, orientacion sexual, datos biométricos).</li>
                 <li><strong>Titular:</strong> Persona natural cuyos datos personales sean objeto de tratamiento.</li>
-                <li><strong>Responsable del tratamiento:</strong> Persona natural o juridica que decide sobre la base de datos y/o el tratamiento de los datos. Para efectos de esta politica, MAXIMIZA S.A.S.</li>
-                <li><strong>Encargado del tratamiento:</strong> Persona natural o juridica que realiza el tratamiento de datos personales por cuenta del responsable.</li>
-                <li><strong>Tratamiento:</strong> Cualquier operacion o conjunto de operaciones sobre datos personales, tales como la recoleccion, almacenamiento, uso, circulacion o supresion.</li>
-                <li><strong>Autorizacion:</strong> Consentimiento previo, expreso e informado del titular para llevar a cabo el tratamiento de sus datos personales.</li>
-                <li><strong>Aviso de privacidad:</strong> Comunicacion verbal o escrita dirigida al titular para informarle sobre la existencia de las politicas de tratamiento que le seran aplicables y la forma de acceder a ellas.</li>
+                <li><strong>Responsable del tratamiento:</strong> Persona natural o jurídica que decide sobre la base de datos y/o el tratamiento de los datos. Para efectos de esta política, MAXIMIZA S.A.S.</li>
+                <li><strong>Encargado del tratamiento:</strong> Persona natural o jurídica que realiza el tratamiento de datos personales por cuenta del responsable.</li>
+                <li><strong>Tratamiento:</strong> Cualquier operación o conjunto de operaciones sobre datos personales, tales como la recolección, almacenamiento, uso, circulación o supresión.</li>
+                <li><strong>Autorización:</strong> Consentimiento previo, expreso e informado del titular para llevar a cabo el tratamiento de sus datos personales.</li>
+                <li><strong>Aviso de privacidad:</strong> Comunicación verbal o escrita dirigida al titular para informarle sobre la existencia de las políticas de tratamiento que le serán aplicables y la forma de acceder a ellas.</li>
                 <li><strong>Base de datos:</strong> Conjunto organizado de datos personales que sea objeto de tratamiento.</li>
-                <li><strong>Transferencia:</strong> Envio de datos personales por el responsable a un tercero (otro responsable) dentro o fuera de Colombia.</li>
-                <li><strong>Transmision:</strong> Comunicacion de datos personales por el responsable al encargado, dentro o fuera de Colombia, para que este realice el tratamiento por cuenta del responsable.</li>
+                <li><strong>Transferencia:</strong> Envío de datos personales por el responsable a un tercero (otro responsable) dentro o fuera de Colombia.</li>
+                <li><strong>Transmisión:</strong> Comunicación de datos personales por el responsable al encargado, dentro o fuera de Colombia, para que este realice el tratamiento por cuenta del responsable.</li>
               </ul>
             </section>
 
@@ -110,16 +110,16 @@ export default function PoliticaDatosPage() {
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
                 4. PRINCIPIOS RECTORES DEL TRATAMIENTO
               </h2>
-              <p>MAXIMIZA S.A.S. aplicara los siguientes principios en el tratamiento de datos personales, conforme al articulo 4 de la Ley 1581 de 2012:</p>
+              <p>MAXIMIZA S.A.S. aplicará los siguientes principios en el tratamiento de datos personales, conforme al artículo 4 de la Ley 1581 de 2012:</p>
               <ul className="list-disc pl-6 space-y-2 mt-2">
-                <li><strong>Principio de legalidad:</strong> El tratamiento es una actividad reglada que debe sujetarse a la ley y demas disposiciones que la desarrollen.</li>
-                <li><strong>Principio de finalidad:</strong> El tratamiento debe obedecer a una finalidad legitima, la cual debe ser informada al titular.</li>
+                <li><strong>Principio de legalidad:</strong> El tratamiento es una actividad reglada que debe sujetarse a la ley y demás disposiciones que la desarrollen.</li>
+                <li><strong>Principio de finalidad:</strong> El tratamiento debe obedecer a una finalidad legítima, la cual debe ser informada al titular.</li>
                 <li><strong>Principio de libertad:</strong> El tratamiento solo puede ejercerse con el consentimiento previo, expreso e informado del titular.</li>
-                <li><strong>Principio de veracidad o calidad:</strong> La informacion sujeta a tratamiento debe ser veraz, completa, exacta, actualizada y comprobable.</li>
-                <li><strong>Principio de transparencia:</strong> En el tratamiento debe garantizarse el derecho del titular a obtener informacion acerca de la existencia de datos que le conciernan.</li>
-                <li><strong>Principio de acceso y circulacion restringida:</strong> El tratamiento solo podra hacerse por las personas autorizadas por el titular y/o por las previstas en la ley.</li>
-                <li><strong>Principio de seguridad:</strong> La informacion sujeta a tratamiento se debera manejar con las medidas tecnicas, humanas y administrativas necesarias para otorgar seguridad a los registros.</li>
-                <li><strong>Principio de confidencialidad:</strong> Todas las personas que intervengan en el tratamiento de datos personales estan obligadas a garantizar la reserva de la informacion.</li>
+                <li><strong>Principio de veracidad o calidad:</strong> La información sujeta a tratamiento debe ser veraz, completa, exacta, actualizada y comprobable.</li>
+                <li><strong>Principio de transparencia:</strong> En el tratamiento debe garantizarse el derecho del titular a obtener información acerca de la existencia de datos que le conciernan.</li>
+                <li><strong>Principio de acceso y circulación restringida:</strong> El tratamiento solo podrá hacerse por las personas autorizadas por el titular y/o por las previstas en la ley.</li>
+                <li><strong>Principio de seguridad:</strong> La información sujeta a tratamiento se deberá manejar con las medidas técnicas, humanas y administrativas necesarias para otorgar seguridad a los registros.</li>
+                <li><strong>Principio de confidencialidad:</strong> Todas las personas que intervengan en el tratamiento de datos personales están obligadas a garantizar la reserva de la información.</li>
               </ul>
             </section>
 
@@ -128,34 +128,34 @@ export default function PoliticaDatosPage() {
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
                 5. TRATAMIENTO Y FINALIDADES
               </h2>
-              <p>MAXIMIZA S.A.S., a traves de su establecimiento comercial Mawa (www.mawa.com.co), recolecta y trata datos personales para las siguientes finalidades, segun el tipo de titular:</p>
+              <p>MAXIMIZA S.A.S., a través de su establecimiento comercial Mawá (www.mawa.com.co), recolecta y trata datos personales para las siguientes finalidades, según el tipo de titular:</p>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">5.1. Clientes y usuarios</h3>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Gestionar reservas de alojamiento en el hotel, mesas en el restaurante y actividades de recreacion.</li>
-                <li>Procesar compras de servicios realizadas a traves del sitio web www.mawa.com.co o de forma presencial.</li>
-                <li>Realizar el proceso de facturacion, cobro y envio de comprobantes electronicos.</li>
+                <li>Gestionar reservas de alojamiento en el hotel, mesas en el restaurante y actividades de recreación.</li>
+                <li>Procesar compras de servicios realizadas a través del sitio web www.mawa.com.co o de forma presencial.</li>
+                <li>Realizar el proceso de facturación, cobro y envío de comprobantes electrónicos.</li>
                 <li>Enviar confirmaciones, recordatorios y comunicaciones relacionadas con los servicios contratados.</li>
-                <li>Enviar informacion comercial, promociones, ofertas y novedades de los servicios de Mawa, previa autorizacion especifica del titular.</li>
-                <li>Realizar encuestas de satisfaccion y estudios de mercado.</li>
+                <li>Enviar información comercial, promociones, ofertas y novedades de los servicios de Mawá, previa autorización específica del titular.</li>
+                <li>Realizar encuestas de satisfacción y estudios de mercado.</li>
                 <li>Atender peticiones, consultas, quejas y reclamos.</li>
                 <li>Cumplir obligaciones legales y regulatorias (tributarias, contables, de seguridad, migratorias, entre otras).</li>
-                <li>Garantizar la seguridad de los huespedes y usuarios dentro de las instalaciones del establecimiento, incluyendo el monitoreo a traves del sistema de circuito cerrado de television (CCTV).</li>
-                <li>Gestionar programas de fidelizacion, en caso de que se implementen.</li>
+                <li>Garantizar la seguridad de los huéspedes y usuarios dentro de las instalaciones del establecimiento, incluyendo el monitoreo a través del sistema de circuito cerrado de televisión (CCTV).</li>
+                <li>Gestionar programas de fidelización, en caso de que se implementen.</li>
               </ul>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">5.2. Proveedores y aliados comerciales</h3>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Gestionar la relacion contractual y comercial.</li>
+                <li>Gestionar la relación contractual y comercial.</li>
                 <li>Realizar pagos y cumplir obligaciones tributarias.</li>
                 <li>Evaluar la calidad de los productos y servicios suministrados.</li>
               </ul>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">5.3. Empleados y colaboradores</h3>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Ejecutar el contrato laboral o de prestacion de servicios.</li>
+                <li>Ejecutar el contrato laboral o de prestación de servicios.</li>
                 <li>Cumplir obligaciones legales en materia laboral, de seguridad social y salud ocupacional.</li>
-                <li>Gestionar procesos de seleccion, capacitacion y evaluacion del desempeno.</li>
+                <li>Gestionar procesos de selección, capacitación y evaluación del desempeño.</li>
               </ul>
             </section>
 
@@ -164,57 +164,57 @@ export default function PoliticaDatosPage() {
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
                 6. DATOS PERSONALES QUE SE RECOLECTAN
               </h2>
-              <p>Dependiendo de la relacion con el titular, MAXIMIZA S.A.S. podra recolectar los siguientes tipos de datos personales:</p>
+              <p>Dependiendo de la relación con el titular, MAXIMIZA S.A.S. podrá recolectar los siguientes tipos de datos personales:</p>
 
-              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">6.1. Datos de identificacion</h3>
-              <p>Nombres y apellidos, tipo y numero de documento de identidad, fecha de nacimiento, nacionalidad, sexo, estado civil, firma.</p>
+              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">6.1. Datos de identificación</h3>
+              <p>Nombres y apellidos, tipo y número de documento de identidad, fecha de nacimiento, nacionalidad, sexo, estado civil, firma.</p>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">6.2. Datos de contacto</h3>
-              <p>Direccion de residencia o domicilio, correo electronico, numero(s) de telefono fijo y/o celular.</p>
+              <p>Dirección de residencia o domicilio, correo electrónico, número(s) de teléfono fijo y/o celular.</p>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">6.3. Datos de transacciones comerciales</h3>
-              <p>Historial de reservas y compras, preferencias de servicio, metodo de pago utilizado (sin almacenar datos completos de tarjeta de credito, los cuales son gestionados exclusivamente por la pasarela de pago certificada).</p>
+              <p>Historial de reservas y compras, preferencias de servicio, método de pago utilizado (sin almacenar datos completos de tarjeta de crédito, los cuales son gestionados exclusivamente por la pasarela de pago certificada).</p>
 
-              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">6.4. Datos de navegacion web</h3>
-              <p>Direccion IP, tipo de navegador, cookies, datos de sesion y comportamiento de navegacion en el sitio www.mawa.com.co, conforme a la politica de cookies publicada en el sitio.</p>
+              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">6.4. Datos de navegación web</h3>
+              <p>Dirección IP, tipo de navegador, cookies, datos de sesión y comportamiento de navegación en el sitio www.mawa.com.co, conforme a la política de cookies publicada en el sitio.</p>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">6.5. Datos sensibles (cuando aplique)</h3>
-              <p>MAXIMIZA S.A.S. podra recolectar datos sensibles unicamente cuando sea estrictamente necesario para la prestacion de sus servicios y con autorizacion expresa del titular. Estos pueden incluir:</p>
+              <p>MAXIMIZA S.A.S. podrá recolectar datos sensibles únicamente cuando sea estrictamente necesario para la prestación de sus servicios y con autorización expresa del titular. Estos pueden incluir:</p>
               <ul className="list-disc pl-6 space-y-1">
                 <li>Restricciones alimentarias o alergias (para servicios de restaurante).</li>
-                <li>Condiciones medicas relevantes para la participacion en actividades de recreacion.</li>
-                <li>Datos biometricos: imagenes faciales y corporales captadas por el sistema de videovigilancia (CCTV) del establecimiento.</li>
+                <li>Condiciones médicas relevantes para la participación en actividades de recreación.</li>
+                <li>Datos biométricos: imágenes faciales y corporales captadas por el sistema de videovigilancia (CCTV) del establecimiento.</li>
               </ul>
-              <p className="mt-2">En ningun caso se condicionara la prestacion de servicios a que el titular suministre datos sensibles. Se informara al titular, de manera expresa y previa, que no esta obligado a autorizar el tratamiento de estos datos y se le explicara cuales datos sensibles seran tratados y con que finalidad.</p>
+              <p className="mt-2">En ningún caso se condicionará la prestación de servicios a que el titular suministre datos sensibles. Se informará al titular, de manera expresa y previa, que no esta obligado a autorizar el tratamiento de estos datos y se le explicará cuales datos sensibles serán tratados y con que finalidad.</p>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">6.6. Datos de menores de edad</h3>
-              <p>MAXIMIZA S.A.S. podra tratar datos de menores de edad unicamente con la autorizacion previa del representante legal, respetando el interes superior del menor y su derecho a ser escuchado. El tratamiento se limitara a lo estrictamente necesario para la prestacion de los servicios contratados (por ejemplo, actividades de recreacion).</p>
+              <p>MAXIMIZA S.A.S. podrá tratar datos de menores de edad únicamente con la autorización previa del representante legal, respetando el interés superior del menor y su derecho a ser escuchado. El tratamiento se limitará a lo estrictamente necesario para la prestación de los servicios contratados (por ejemplo, actividades de recreación).</p>
             </section>
 
             {/* Sección 7 */}
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
-                7. AUTORIZACION PARA EL TRATAMIENTO DE DATOS PERSONALES
+                7. AUTORIZACIÓN PARA EL TRATAMIENTO DE DATOS PERSONALES
               </h2>
-              <p>MAXIMIZA S.A.S. obtendra la autorizacion previa, expresa e informada del titular para el tratamiento de sus datos personales. Esta autorizacion podra ser otorgada a traves de:</p>
+              <p>MAXIMIZA S.A.S. obtendrá la autorización previa, expresa e informada del titular para el tratamiento de sus datos personales. Esta autorización podrá ser otorgada a través de:</p>
               <ul className="list-disc pl-6 space-y-1 mt-2">
-                <li>Aceptacion electronica mediante checkbox en el sitio web www.mawa.com.co al momento de registro, reserva o compra.</li>
-                <li>Formato fisico de autorizacion firmado por el titular en las instalaciones del establecimiento.</li>
-                <li>Manifestacion verbal registrada y documentada por medios verificables.</li>
-                <li>Conducta inequivoca del titular que permita concluir razonablemente que otorgo la autorizacion, conforme al articulo 7 del Decreto 1377 de 2013.</li>
+                <li>Aceptación electrónica mediante checkbox en el sitio web www.mawa.com.co al momento de registro, reserva o compra.</li>
+                <li>Formato físico de autorización firmado por el titular en las instalaciones del establecimiento.</li>
+                <li>Manifestación verbal registrada y documentada por medios verificables.</li>
+                <li>Conducta inequívoca del titular que permita concluir razonablemente que otorgó la autorización, conforme al artículo 7 del Decreto 1377 de 2013.</li>
               </ul>
-              <p className="mt-2">MAXIMIZA S.A.S. conservara prueba de la autorizacion otorgada por el titular (fecha, hora, medio de obtencion y texto aceptado) y la pondra a disposicion del titular cuando este la solicite.</p>
+              <p className="mt-2">MAXIMIZA S.A.S. conservará prueba de la autorización otorgada por el titular (fecha, hora, medio de obtención y texto aceptado) y la pondrá a disposición del titular cuando este la solicite.</p>
 
-              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">7.1. Autorizacion para comunicaciones comerciales</h3>
-              <p>El envio de informacion comercial, promociones u ofertas requerira una autorizacion especifica y separada del titular. Esta autorizacion podra ser revocada en cualquier momento a traves de los canales dispuestos para tal fin.</p>
+              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">7.1. Autorización para comunicaciones comerciales</h3>
+              <p>El envío de información comercial, promociones u ofertas requerirá una autorización específica y separada del titular. Esta autorización podrá ser revocada en cualquier momento a través de los canales dispuestos para tal fin.</p>
 
-              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">7.2. Casos en que no se requiere autorizacion</h3>
-              <p>De conformidad con el articulo 10 de la Ley 1581 de 2012, no se requerira autorizacion del titular en los siguientes casos:</p>
+              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">7.2. Casos en que no se requiere autorización</h3>
+              <p>De conformidad con el artículo 10 de la Ley 1581 de 2012, no se requerirá autorización del titular en los siguientes casos:</p>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Informacion requerida por una entidad publica o administrativa en ejercicio de sus funciones legales o por orden judicial.</li>
-                <li>Datos de naturaleza publica.</li>
-                <li>Casos de urgencia medica o sanitaria.</li>
-                <li>Tratamiento de informacion autorizado por la ley para fines historicos, estadisticos o cientificos.</li>
+                <li>Información requerida por una entidad pública o administrativa en ejercicio de sus funciones legales o por orden judicial.</li>
+                <li>Datos de naturaleza pública.</li>
+                <li>Casos de urgencia médica o sanitaria.</li>
+                <li>Tratamiento de información autorizado por la ley para fines históricos, estadísticos o científicos.</li>
                 <li>Datos relacionados con el Registro Civil de las personas.</li>
               </ul>
             </section>
@@ -224,13 +224,13 @@ export default function PoliticaDatosPage() {
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
                 8. DERECHOS DE LOS TITULARES
               </h2>
-              <p>De conformidad con el articulo 8 de la Ley 1581 de 2012, los titulares de los datos personales tienen los siguientes derechos:</p>
+              <p>De conformidad con el artículo 8 de la Ley 1581 de 2012, los titulares de los datos personales tienen los siguientes derechos:</p>
               <ul className="list-disc pl-6 space-y-2 mt-2">
-                <li>Conocer, actualizar y rectificar sus datos personales frente a MAXIMIZA S.A.S. Este derecho se podra ejercer frente a datos parciales, inexactos, incompletos, fraccionados, que induzcan a error, o aquellos cuyo tratamiento este expresamente prohibido o no haya sido autorizado.</li>
-                <li>Solicitar prueba de la autorizacion otorgada para el tratamiento de sus datos personales.</li>
+                <li>Conocer, actualizar y rectificar sus datos personales frente a MAXIMIZA S.A.S. Este derecho se podrá ejercer frente a datos parciales, inexactos, incompletos, fraccionados, que induzcan a error, o aquellos cuyo tratamiento este expresamente prohibido o no haya sido autorizado.</li>
+                <li>Solicitar prueba de la autorización otorgada para el tratamiento de sus datos personales.</li>
                 <li>Ser informado por MAXIMIZA S.A.S., previa solicitud, respecto del uso que le ha dado a sus datos personales.</li>
-                <li>Presentar ante la Superintendencia de Industria y Comercio quejas por infracciones a lo dispuesto en la Ley 1581 de 2012 y las demas normas que la modifiquen, adicionen o complementen.</li>
-                <li>Revocar la autorizacion y/o solicitar la supresion del dato cuando en el tratamiento no se respeten los principios, derechos y garantias constitucionales y legales.</li>
+                <li>Presentar ante la Superintendencia de Industria y Comercio quejas por infracciones a lo dispuesto en la Ley 1581 de 2012 y las demás normas que la modifiquen, adicionen o complementen.</li>
+                <li>Revocar la autorización y/o solicitar la supresión del dato cuando en el tratamiento no se respeten los principios, derechos y garantías constitucionales y legales.</li>
                 <li>Acceder en forma gratuita a sus datos personales que hayan sido objeto de tratamiento.</li>
               </ul>
             </section>
@@ -240,26 +240,26 @@ export default function PoliticaDatosPage() {
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
                 9. PROCEDIMIENTO PARA EJERCER LOS DERECHOS
               </h2>
-              <p>Los titulares podran ejercer sus derechos de consulta, reclamo, actualizacion, rectificacion, revocatoria y supresion de datos a traves de los siguientes canales:</p>
+              <p>Los titulares podrán ejercer sus derechos de consulta, reclamo, actualización, rectificación, revocatoria y supresión de datos a través de los siguientes canales:</p>
               <ul className="list-disc pl-6 space-y-1 mt-2">
-                <li>Correo electronico: contacto@mawa.com.co</li>
-                <li>Correo fisico: Calle 24B No 6 - 95</li>
-                <li>Presencialmente en las instalaciones de Mawa.</li>
+                <li>Correo electrónico: contacto@mawa.com.co</li>
+                <li>Correo físico: Calle 24B No 6 - 95</li>
+                <li>Presencialmente en las instalaciones de Mawá.</li>
               </ul>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">9.1. Consultas</h3>
-              <p>El titular o sus causahabientes podran consultar la informacion personal que repose en las bases de datos de MAXIMIZA S.A.S. La consulta sera atendida en un termino maximo de diez (10) dias habiles contados a partir de la fecha de recibo de la misma. Cuando no fuere posible atender la consulta dentro de dicho termino, se informara al interesado, expresandole los motivos de la demora y senalando la fecha en que se atendera, la cual no podra superar los cinco (5) dias habiles siguientes al vencimiento del primer termino.</p>
+              <p>El titular o sus causahabientes podrán consultar la información personal que repose en las bases de datos de MAXIMIZA S.A.S. La consulta será atendida en un término máximo de diez (10) días hábiles contados a partir de la fecha de recibo de la misma. Cuando no fuere posible atender la consulta dentro de dicho término, se informará al interesado, expresándole los motivos de la demora y señalando la fecha en que se atenderá, la cual no podrá superar los cinco (5) días hábiles siguientes al vencimiento del primer término.</p>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">9.2. Reclamos</h3>
-              <p>El titular o sus causahabientes que consideren que la informacion contenida en una base de datos debe ser objeto de correccion, actualizacion o supresion, o cuando adviertan el presunto incumplimiento de cualquiera de los deberes contenidos en la Ley 1581 de 2012, podran presentar un reclamo que contenga como minimo:</p>
+              <p>El titular o sus causahabientes que consideren que la información contenida en una base de datos debe ser objeto de corrección, actualización o supresión, o cuando adviertan el presunto incumplimiento de cualquiera de los deberes contenidos en la Ley 1581 de 2012, podrán presentar un reclamo que contenga como mínimo:</p>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Identificacion del titular (nombre completo y numero de documento).</li>
-                <li>Descripcion de los hechos que dan lugar al reclamo.</li>
-                <li>Direccion fisica o electronica para recibir respuesta.</li>
+                <li>Identificación del titular (nombre completo y número de documento).</li>
+                <li>Descripción de los hechos que dan lugar al reclamo.</li>
+                <li>Dirección física o electrónica para recibir respuesta.</li>
                 <li>Documentos que desee hacer valer como prueba.</li>
               </ul>
-              <p className="mt-2">Si el reclamo resulta incompleto, se requerira al interesado dentro de los cinco (5) dias habiles siguientes a la recepcion para que subsane las fallas. Si transcurridos dos (2) meses desde la fecha del requerimiento el solicitante no presenta la informacion requerida, se entendera que ha desistido del reclamo.</p>
-              <p className="mt-2">El termino maximo para atender el reclamo sera de quince (15) dias habiles contados a partir del dia siguiente a la fecha de su recibo. Cuando no fuere posible atenderlo dentro de dicho termino, se informara al interesado los motivos de la demora y la fecha en que se atendera, la cual no podra superar los ocho (8) dias habiles siguientes al vencimiento del primer termino.</p>
+              <p className="mt-2">Si el reclamo resulta incompleto, se requerirá al interesado dentro de los cinco (5) días hábiles siguientes a la recepción para que subsane las fallas. Si transcurridos dos (2) meses desde la fecha del requerimiento el solicitante no presenta la información requerida, se entenderá que ha desistido del reclamo.</p>
+              <p className="mt-2">El término máximo para atender el reclamo será de quince (15) días hábiles contados a partir del día siguiente a la fecha de su recibo. Cuando no fuere posible atenderlo dentro de dicho término, se informará al interesado los motivos de la demora y la fecha en que se atenderá, la cual no podrá superar los ocho (8) días hábiles siguientes al vencimiento del primer término.</p>
             </section>
 
             {/* Sección 10 */}
@@ -270,13 +270,13 @@ export default function PoliticaDatosPage() {
               <p>En su calidad de responsable del tratamiento, MAXIMIZA S.A.S. se compromete a:</p>
               <ul className="list-disc pl-6 space-y-1 mt-2">
                 <li>Garantizar al titular, en todo tiempo, el pleno y efectivo ejercicio del derecho de habeas data.</li>
-                <li>Solicitar y conservar copia de la autorizacion otorgada por el titular.</li>
-                <li>Informar debidamente al titular sobre la finalidad de la recoleccion y los derechos que le asisten.</li>
-                <li>Conservar la informacion bajo las condiciones de seguridad necesarias para impedir su adulteracion, perdida, consulta, uso o acceso no autorizado o fraudulento.</li>
-                <li>Actualizar la informacion cuando sea necesario.</li>
-                <li>Rectificar la informacion cuando sea incorrecta y comunicar lo pertinente al encargado del tratamiento.</li>
-                <li>Tramitar las consultas y reclamos formulados en los terminos de ley.</li>
-                <li>Informar a la SIC cuando se presenten violaciones a los codigos de seguridad y existan riesgos en la administracion de la informacion de los titulares.</li>
+                <li>Solicitar y conservar copia de la autorización otorgada por el titular.</li>
+                <li>Informar debidamente al titular sobre la finalidad de la recolección y los derechos que le asisten.</li>
+                <li>Conservar la información bajo las condiciones de seguridad necesarias para impedir su adulteración, pérdida, consulta, uso o acceso no autorizado o fraudulento.</li>
+                <li>Actualizar la información cuando sea necesario.</li>
+                <li>Rectificar la información cuando sea incorrecta y comunicar lo pertinente al encargado del tratamiento.</li>
+                <li>Tramitar las consultas y reclamos formulados en los términos de ley.</li>
+                <li>Informar a la SIC cuando se presenten violaciones a los códigos de seguridad y existan riesgos en la administración de la información de los titulares.</li>
                 <li>Cumplir las instrucciones y requerimientos que imparta la Superintendencia de Industria y Comercio.</li>
               </ul>
             </section>
@@ -286,135 +286,135 @@ export default function PoliticaDatosPage() {
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
                 11. MEDIDAS DE SEGURIDAD
               </h2>
-              <p>MAXIMIZA S.A.S. adoptara las medidas tecnicas, humanas y administrativas necesarias para garantizar la seguridad de los datos personales, evitando su adulteracion, perdida, consulta, uso o acceso no autorizado. Entre las medidas implementadas se encuentran:</p>
+              <p>MAXIMIZA S.A.S. adoptará las medidas técnicas, humanas y administrativas necesarias para garantizar la seguridad de los datos personales, evitando su adulteración, pérdida, consulta, uso o acceso no autorizado. Entre las medidas implementadas se encuentran:</p>
               <ul className="list-disc pl-6 space-y-1 mt-2">
-                <li>Cifrado SSL/TLS (protocolo HTTPS) en el sitio web www.mawa.com.co para proteger la transmision de datos.</li>
-                <li>Uso de pasarelas de pago certificadas bajo estandares PCI-DSS para el procesamiento de transacciones con tarjeta de credito o debito. MAXIMIZA S.A.S. no almacena datos completos de tarjetas de pago en sus servidores.</li>
+                <li>Cifrado SSL/TLS (protocolo HTTPS) en el sitio web www.mawa.com.co para proteger la transmisión de datos.</li>
+                <li>Uso de pasarelas de pago certificadas bajo estándares PCI-DSS para el procesamiento de transacciones con tarjeta de crédito o débito. MAXIMIZA S.A.S. no almacena datos completos de tarjetas de pago en sus servidores.</li>
                 <li>Control de acceso basado en roles para limitar el acceso a los datos personales al personal estrictamente autorizado.</li>
-                <li>Almacenamiento seguro de bases de datos con mecanismos de cifrado y copias de respaldo periodicas.</li>
+                <li>Almacenamiento seguro de bases de datos con mecanismos de cifrado y copias de respaldo periódicas.</li>
                 <li>Acuerdos de confidencialidad con empleados y contratistas que tengan acceso a datos personales.</li>
-                <li>Capacitacion periodica al personal en materia de proteccion de datos personales.</li>
-                <li>Plan de respuesta ante incidentes de seguridad de la informacion.</li>
-                <li>Revision y actualizacion periodica de las medidas de seguridad implementadas.</li>
+                <li>Capacitación periódica al personal en materia de protección de datos personales.</li>
+                <li>Plan de respuesta ante incidentes de seguridad de la información.</li>
+                <li>Revisión y actualización periódica de las medidas de seguridad implementadas.</li>
               </ul>
             </section>
 
             {/* Sección 12 */}
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
-                12. TRANSFERENCIA Y TRANSMISION DE DATOS A TERCEROS
+                12. TRANSFERENCIA Y TRANSMISIÓN DE DATOS A TERCEROS
               </h2>
-              <p>MAXIMIZA S.A.S. podra transmitir datos personales a terceros encargados del tratamiento que le presten servicios necesarios para el desarrollo de su objeto social, tales como:</p>
+              <p>MAXIMIZA S.A.S. podrá transmitir datos personales a terceros encargados del tratamiento que le presten servicios necesarios para el desarrollo de su objeto social, tales como:</p>
               <ul className="list-disc pl-6 space-y-1 mt-2">
                 <li>Pasarelas de pago y entidades financieras para el procesamiento de transacciones.</li>
-                <li>Plataformas de correo electronico y comunicaciones para el envio de confirmaciones y comunicaciones.</li>
+                <li>Plataformas de correo electrónico y comunicaciones para el envío de confirmaciones y comunicaciones.</li>
                 <li>Proveedores de servicios de hosting y almacenamiento en la nube.</li>
-                <li>Proveedores de herramientas de gestion de clientes (CRM) y analitica.</li>
+                <li>Proveedores de herramientas de gestión de clientes (CRM) y analítica.</li>
                 <li>Entidades gubernamentales que lo requieran en ejercicio de sus funciones legales.</li>
               </ul>
-              <p className="mt-2">En todos los casos, MAXIMIZA S.A.S. suscribira contratos de transmision de datos personales con los encargados, exigiendo el cumplimiento de la presente politica y de la Ley 1581 de 2012. Se prohibe la transferencia de datos personales a paises que no proporcionen niveles adecuados de proteccion, salvo las excepciones previstas en el articulo 26 de la Ley 1581 de 2012, incluyendo la autorizacion expresa del titular.</p>
+              <p className="mt-2">En todos los casos, MAXIMIZA S.A.S. suscribirá contratos de transmisión de datos personales con los encargados, exigiendo el cumplimiento de la presente política y de la Ley 1581 de 2012. Se prohibe la transferencia de datos personales a países que no proporcionen niveles adecuados de protección, salvo las excepciones previstas en el artículo 26 de la Ley 1581 de 2012, incluyendo la autorización expresa del titular.</p>
             </section>
 
             {/* Sección 13 */}
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
-                13. POLITICA DE COOKIES
+                13. POLÍTICA DE COOKIES
               </h2>
-              <p>El sitio web www.mawa.com.co utiliza cookies y tecnologias similares para mejorar la experiencia del usuario, analizar el trafico web y personalizar el contenido. Al navegar en el sitio, el usuario podra aceptar o rechazar el uso de cookies no esenciales mediante el banner de cookies desplegado en su primera visita.</p>
+              <p>El sitio web www.mawa.com.co utiliza cookies y tecnologías similares para mejorar la experiencia del usuario, analizar el tráfico web y personalizar el contenido. Al navegar en el sitio, el usuario podrá aceptar o rechazar el uso de cookies no esenciales mediante el banner de cookies desplegado en su primera visita.</p>
               <p className="mt-2">Los tipos de cookies utilizados incluyen:</p>
               <ul className="list-disc pl-6 space-y-1">
-                <li><strong>Cookies esenciales:</strong> necesarias para el funcionamiento basico del sitio web (sesion, carrito de compras, seguridad).</li>
-                <li><strong>Cookies analiticas:</strong> permiten analizar el comportamiento de los usuarios en el sitio para mejorar su funcionalidad.</li>
-                <li><strong>Cookies de marketing:</strong> utilizadas para mostrar contenido relevante y medir la efectividad de las campanas publicitarias.</li>
+                <li><strong>Cookies esenciales:</strong> necesarias para el funcionamiento básico del sitio web (sesión, carrito de compras, seguridad).</li>
+                <li><strong>Cookies analíticas:</strong> permiten analizar el comportamiento de los usuarios en el sitio para mejorar su funcionalidad.</li>
+                <li><strong>Cookies de marketing:</strong> utilizadas para mostrar contenido relevante y medir la efectividad de las campañas publicitarias.</li>
               </ul>
-              <p className="mt-2">El usuario podra gestionar sus preferencias de cookies en cualquier momento a traves de la configuracion de su navegador o del enlace de configuracion de cookies disponible en el sitio web.</p>
+              <p className="mt-2">El usuario podrá gestionar sus preferencias de cookies en cualquier momento a través de la configuración de su navegador o del enlace de configuración de cookies disponible en el sitio web.</p>
             </section>
 
             {/* Sección 14 */}
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
-                14. SISTEMA DE VIDEOVIGILANCIA (CIRCUITO CERRADO DE TELEVISION)
+                14. SISTEMA DE VIDEOVIGILANCIA (CIRCUITO CERRADO DE TELEVISIÓN)
               </h2>
-              <p>MAXIMIZA S.A.S. opera un sistema de videovigilancia mediante circuito cerrado de television (CCTV) en las instalaciones de Mawa con el proposito de garantizar la seguridad de las personas, los bienes y las instalaciones del establecimiento. Las imagenes captadas a traves de este sistema constituyen datos personales de naturaleza biometrica y, en consecuencia, su tratamiento se rige por la Ley 1581 de 2012, el Decreto 1377 de 2013 y la Guia sobre Proteccion de Datos Personales en Sistemas de Videovigilancia expedida por la Superintendencia de Industria y Comercio.</p>
+              <p>MAXIMIZA S.A.S. opera un sistema de videovigilancia mediante circuito cerrado de televisión (CCTV) en las instalaciones de Mawá con el propósito de garantizar la seguridad de las personas, los bienes y las instalaciones del establecimiento. Las imágenes captadas a través de este sistema constituyen datos personales de naturaleza biométrica y, en consecuencia, su tratamiento se rige por la Ley 1581 de 2012, el Decreto 1377 de 2013 y la Guía sobre Protección de Datos Personales en Sistemas de Videovigilancia expedida por la Superintendencia de Industria y Comercio.</p>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">14.1. Finalidad del sistema de videovigilancia</h3>
               <p>El sistema de CCTV tiene como finalidad exclusiva:</p>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Garantizar la seguridad de los huespedes, comensales, visitantes, empleados y demas personas que ingresen a las instalaciones de Mawa.</li>
+                <li>Garantizar la seguridad de los huéspedes, comensales, visitantes, empleados y demás personas que ingresen a las instalaciones de Mawá.</li>
                 <li>Proteger los bienes muebles e inmuebles del establecimiento.</li>
                 <li>Prevenir, disuadir y, en su caso, aportar elementos probatorios en investigaciones relacionadas con conductas delictivas o contrarias a las normas internas del establecimiento.</li>
-                <li>Ejercer control de acceso a las areas del hotel y zonas restringidas.</li>
+                <li>Ejercer control de acceso a las áreas del hotel y zonas restringidas.</li>
               </ul>
 
-              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">14.2. Areas monitoreadas</h3>
-              <p>Las camaras de videovigilancia se encuentran ubicadas en las areas comunes y de acceso publico del establecimiento, tales como:</p>
+              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">14.2. Áreas monitoreadas</h3>
+              <p>Las cámaras de videovigilancia se encuentran ubicadas en las áreas comunes y de acceso público del establecimiento, tales como:</p>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Accesos principales y secundarios (entradas, salidas, recepcion).</li>
-                <li>Pasillos y areas de circulacion comun.</li>
+                <li>Accesos principales y secundarios (entradas, salidas, recepción).</li>
+                <li>Pasillos y áreas de circulación común.</li>
                 <li>Zonas de parqueadero.</li>
-                <li>Areas del restaurante y zonas sociales.</li>
-                <li>Perimetro exterior de las instalaciones.</li>
-                <li>Zonas de recreacion y esparcimiento.</li>
+                <li>Áreas del restaurante y zonas sociales.</li>
+                <li>Perímetro exterior de las instalaciones.</li>
+                <li>Zonas de recreación y esparcimiento.</li>
               </ul>
-              <p className="mt-2">En ningun caso se instalaran camaras de videovigilancia en areas que afecten la intimidad de las personas, tales como habitaciones del hotel, banos, vestuarios o cualquier otro espacio de caracter intimo o privado.</p>
+              <p className="mt-2">En ningún caso se instalaran cámaras de videovigilancia en áreas que afecten la intimidad de las personas, tales como habitaciones del hotel, baños, vestuarios o cualquier otro espacio de carácter íntimo o privado.</p>
 
-              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">14.3. Senalizacion e informacion al titular</h3>
-              <p>MAXIMIZA S.A.S. situara avisos informativos visibles en los accesos y areas monitoreadas que informen a las personas sobre la existencia del sistema de videovigilancia. Dichos avisos contendran, como minimo:</p>
+              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">14.3. Señalización e información al titular</h3>
+              <p>MAXIMIZA S.A.S. situará avisos informativos visibles en los accesos y áreas monitoreadas que informen a las personas sobre la existencia del sistema de videovigilancia. Dichos avisos contendrán, como mínimo:</p>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Un simbolo o pictograma que indique claramente que la zona se encuentra videovigilada.</li>
+                <li>Un símbolo o pictograma que indique claramente que la zona se encuentra videovigilada.</li>
                 <li>La identidad del responsable del tratamiento (MAXIMIZA S.A.S.).</li>
                 <li>La finalidad del tratamiento (seguridad).</li>
-                <li>La referencia a la politica de tratamiento de datos personales y los medios para consultarla.</li>
+                <li>La referencia a la política de tratamiento de datos personales y los medios para consultarla.</li>
               </ul>
-              <p className="mt-2">La permanencia voluntaria del titular en las zonas videovigiladas, debidamente senalizadas, se entendera como autorizacion para el tratamiento de sus imagenes conforme a la finalidad de seguridad informada, de acuerdo con las directrices de la Superintendencia de Industria y Comercio.</p>
+              <p className="mt-2">La permanencia voluntaria del titular en las zonas videovigiladas, debidamente señalizadas, se entenderá como autorización para el tratamiento de sus imágenes conforme a la finalidad de seguridad informada, de acuerdo con las directrices de la Superintendencia de Industria y Comercio.</p>
 
-              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">14.4. Almacenamiento y plazo de conservacion</h3>
-              <p>Las imagenes captadas por el sistema de CCTV seran almacenadas en sistemas de grabacion con acceso restringido por un plazo maximo de treinta (30) dias calendario, salvo que las imagenes sean requeridas como soporte o prueba en una investigacion, reclamacion, proceso judicial, administrativo o disciplinario, caso en el cual seran conservadas hasta la resolucion definitiva del asunto. Cumplido el plazo de conservacion sin que se haya presentado alguna de estas circunstancias, las grabaciones seran eliminadas de forma segura mediante sobreescritura automatica del sistema.</p>
+              <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">14.4. Almacenamiento y plazo de conservación</h3>
+              <p>Las imágenes captadas por el sistema de CCTV serán almacenadas en sistemas de grabación con acceso restringido por un plazo máximo de treinta (30) días calendario, salvo que las imágenes sean requeridas como soporte o prueba en una investigación, reclamación, proceso judicial, administrativo o disciplinario, caso en el cual serán conservadas hasta la resolución definitiva del asunto. Cumplido el plazo de conservación sin que se haya presentado alguna de estas circunstancias, las grabaciones serán eliminadas de forma segura mediante sobreescritura automática del sistema.</p>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">14.5. Acceso a las grabaciones</h3>
-              <p>El acceso a las imagenes del sistema de videovigilancia estara restringido unicamente a:</p>
+              <p>El acceso a las imágenes del sistema de videovigilancia estará restringido únicamente a:</p>
               <ul className="list-disc pl-6 space-y-1">
-                <li>El personal de seguridad y administracion de MAXIMIZA S.A.S. debidamente autorizado.</li>
+                <li>El personal de seguridad y administración de MAXIMIZA S.A.S. debidamente autorizado.</li>
                 <li>Las autoridades judiciales, administrativas o de policia que las requieran en ejercicio de sus funciones legales.</li>
-                <li>El titular de los datos, cuando solicite el acceso a las imagenes que lo involucren, conforme al procedimiento establecido en la presente politica.</li>
+                <li>El titular de los datos, cuando solicite el acceso a las imágenes que lo involucren, conforme al procedimiento establecido en la presente política.</li>
               </ul>
-              <p className="mt-2">Las imagenes captadas por el sistema de videovigilancia no seran difundidas, publicadas ni compartidas con terceros no autorizados. Todo el personal con acceso a las grabaciones estara sujeto a acuerdos de confidencialidad y a las obligaciones previstas en la presente politica.</p>
+              <p className="mt-2">Las imágenes captadas por el sistema de videovigilancia no serán difundidas, publicadas ni compartidas con terceros no autorizados. Todo el personal con acceso a las grabaciones estará sujeto a acuerdos de confidencialidad y a las obligaciones previstas en la presente política.</p>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">14.6. Seguridad del sistema</h3>
-              <p>MAXIMIZA S.A.S. implementara medidas tecnicas y administrativas para proteger las grabaciones del sistema de CCTV contra acceso no autorizado, manipulacion, perdida o destruccion, incluyendo:</p>
+              <p>MAXIMIZA S.A.S. implementará medidas técnicas y administrativas para proteger las grabaciones del sistema de CCTV contra acceso no autorizado, manipulacion, pérdida o destrucción, incluyendo:</p>
               <ul className="list-disc pl-6 space-y-1">
-                <li>Ubicacion segura de los equipos de grabacion en areas de acceso restringido.</li>
-                <li>Proteccion con contrasena de los sistemas de grabacion y visualizacion.</li>
+                <li>Ubicación segura de los equipos de grabación en áreas de acceso restringido.</li>
+                <li>Protección con contraseña de los sistemas de grabación y visualización.</li>
                 <li>Registro de accesos a las grabaciones (log de auditoria).</li>
-                <li>Mantenimiento preventivo periodico del sistema.</li>
+                <li>Mantenimiento preventivo periódico del sistema.</li>
               </ul>
 
               <h3 className="text-lg font-medium text-gray-800 mt-4 mb-2">14.7. Servicios de seguridad privada (terceros)</h3>
-              <p>En caso de que MAXIMIZA S.A.S. contrate servicios de seguridad privada o de monitoreo a traves de terceros, se celebraran los correspondientes contratos de transmision de datos personales, exigiendo al encargado el cumplimiento de la Ley 1581 de 2012 y de la presente politica de tratamiento de datos personales.</p>
+              <p>En caso de que MAXIMIZA S.A.S. contrate servicios de seguridad privada o de monitoreo a través de terceros, se celebraran los correspondientes contratos de transmisión de datos personales, exigiendo al encargado el cumplimiento de la Ley 1581 de 2012 y de la presente política de tratamiento de datos personales.</p>
             </section>
 
             {/* Sección 15 */}
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
-                15. VIGENCIA DE LAS BASES DE DATOS Y RETENCION DE DATOS
+                15. VIGENCIA DE LAS BASES DE DATOS Y RETENCIÓN DE DATOS
               </h2>
-              <p>Los datos personales seran tratados por MAXIMIZA S.A.S. durante el tiempo que sea razonablemente necesario para cumplir con las finalidades que justificaron su recoleccion, conforme a las disposiciones legales aplicables. En particular:</p>
+              <p>Los datos personales serán tratados por MAXIMIZA S.A.S. durante el tiempo que sea razonablemente necesario para cumplir con las finalidades que justificaron su recolección, conforme a las disposiciones legales aplicables. En particular:</p>
               <ul className="list-disc pl-6 space-y-1 mt-2">
-                <li>Los datos de clientes se conservaran durante la vigencia de la relacion comercial y por el plazo adicional que exija la legislacion tributaria y comercial colombiana (actualmente un minimo de diez anos para documentos contables y tributarios).</li>
-                <li>Los datos de empleados se conservaran durante la vigencia de la relacion laboral y por el plazo de prescripcion de las obligaciones laborales conforme a la ley.</li>
-                <li>Los datos para fines de mercadeo se conservaran hasta que el titular revoque su autorizacion.</li>
-                <li>Las imagenes del sistema de videovigilancia se conservaran por un maximo de treinta (30) dias calendario, conforme a lo establecido en la seccion 14 de la presente politica.</li>
+                <li>Los datos de clientes se conservarán durante la vigencia de la relación comercial y por el plazo adicional que exija la legislacion tributaria y comercial colombiana (actualmente un mínimo de diez años para documentos contables y tributarios).</li>
+                <li>Los datos de empleados se conservarán durante la vigencia de la relación laboral y por el plazo de prescripción de las obligaciones laborales conforme a la ley.</li>
+                <li>Los datos para fines de mercadeo se conservarán hasta que el titular revoque su autorización.</li>
+                <li>Las imágenes del sistema de videovigilancia se conservarán por un máximo de treinta (30) días calendario, conforme a lo establecido en la sección 14 de la presente política.</li>
               </ul>
-              <p className="mt-2">Una vez cumplida la finalidad del tratamiento y vencido el plazo legal de retencion, los datos seran suprimidos de las bases de datos de MAXIMIZA S.A.S.</p>
+              <p className="mt-2">Una vez cumplida la finalidad del tratamiento y vencido el plazo legal de retención, los datos serán suprimidos de las bases de datos de MAXIMIZA S.A.S.</p>
             </section>
 
             {/* Sección 16 */}
             <section>
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
-                16. MODIFICACIONES A LA POLITICA
+                16. MODIFICACIONES A LA POLÍTICA
               </h2>
-              <p>MAXIMIZA S.A.S. se reserva el derecho de modificar la presente politica en cualquier momento. Cualquier cambio sustancial sera comunicado oportunamente a los titulares mediante publicacion en el sitio web www.mawa.com.co y, cuando sea necesario, a traves de los medios de contacto suministrados por los titulares.</p>
-              <p className="mt-2">La version vigente de esta politica estara siempre disponible para consulta en el sitio web www.mawa.com.co.</p>
+              <p>MAXIMIZA S.A.S. se reserva el derecho de modificar la presente política en cualquier momento. Cualquier cambio sustancial será comunicado oportunamente a los titulares mediante publicación en el sitio web www.mawa.com.co y, cuando sea necesario, a través de los medios de contacto suministrados por los titulares.</p>
+              <p className="mt-2">La versión vigente de esta política estará siempre disponible para consulta en el sitio web www.mawa.com.co.</p>
             </section>
 
             {/* Sección 17 */}
@@ -422,7 +422,7 @@ export default function PoliticaDatosPage() {
               <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
                 17. VIGENCIA
               </h2>
-              <p>La presente politica de tratamiento de datos personales fue aprobada y entra en vigencia a partir de su publicacion en el sitio web www.mawa.com.co en el mes de febrero de 2026.</p>
+              <p>La presente política de tratamiento de datos personales fue aprobada y entra en vigencia a partir de su publicación en el sitio web www.mawa.com.co en el mes de febrero de 2026.</p>
             </section>
 
             {/* Firma */}
@@ -449,7 +449,7 @@ export default function PoliticaDatosPage() {
       {/* Footer */}
       <footer className="bg-gray-800 text-gray-400 py-6 mt-12">
         <div className="max-w-4xl mx-auto px-4 text-center text-sm">
-          <p>&copy; 2026 Mawa. Todos los derechos reservados.</p>
+          <p>&copy; 2026 Mawá. Todos los derechos reservados.</p>
         </div>
       </footer>
     </div>

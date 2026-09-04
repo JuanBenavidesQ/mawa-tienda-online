@@ -18,6 +18,8 @@ import {
   tipoDia,
 } from '@/lib/fechas'
 import BoldPayButton from '@/components/BoldPayButton'
+import { trackInicioPago } from '@/lib/analytics'
+import { WHATSAPP_URL } from '@/lib/site'
 
 const BOLD_API_KEY = process.env.NEXT_PUBLIC_BOLD_API_KEY || ''
 
@@ -153,6 +155,11 @@ export default function TiendaPage() {
       setOrdenTotal(data.total)
       setIntegrityHash(data.hash || '')
       setOrdenConfirmada(true)
+      trackInicioPago(
+        data.codigo,
+        Number(data.total) || totales.total,
+        totales.detalle.map((d) => ({ key: d.key, nombre: d.nombre, cantidad: d.cantidad, precioUnitario: d.precioUnitario }))
+      )
     } catch (err: any) {
       console.error('Error:', err)
       setError('Error al procesar la compra. Intenta de nuevo.')
@@ -224,22 +231,24 @@ export default function TiendaPage() {
       <section
         className="relative text-white py-8"
         style={{
-          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(/AereaHotel.jpeg)',
+          backgroundImage: 'linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(/aerea-hotel.webp)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
         <div className="max-w-6xl mx-auto px-4 text-center">
           <img
-            src="/LogoMawaVerde.jpg"
-            alt="Mawa"
-            className="h-20 w-auto mx-auto mb-4 rounded-lg shadow-lg"
+            src="/logo-mawa.png"
+            alt="Mawá"
+            width={88}
+            height={128}
+            className="h-32 w-auto mx-auto mb-4 rounded-lg shadow-lg"
           />
-          <h2 className="text-3xl font-bold mb-2 drop-shadow-lg">
+          <h1 className="text-3xl font-bold mb-2 drop-shadow-lg">
             {tabActivo === 'pasadia' ? 'Compra tus Entradas Online' : 'Reserva tu Alojamiento'}
-          </h2>
+          </h1>
           <p className="text-white/90 text-lg drop-shadow">
-            Piscinas, toboganes y puentes tibetanos
+            Piscinas, toboganes y puentes tibetanos · Km 37,5 vía Ipiales – Pasto
           </p>
         </div>
       </section>
@@ -428,7 +437,7 @@ export default function TiendaPage() {
                   <p className="text-red-600 text-sm text-center">
                     Para planes grupales comunícate a nuestro WhatsApp{' '}
                     <a
-                      href="https://wa.me/573163996541"
+                      href={WHATSAPP_URL}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="font-bold underline hover:text-red-700"
@@ -519,6 +528,7 @@ export default function TiendaPage() {
                       onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="Juan Pérez"
+                      autoComplete="name"
                     />
                   </div>
                   <div>
@@ -532,12 +542,14 @@ export default function TiendaPage() {
                       onChange={(e) => setFormData({ ...formData, celular: e.target.value })}
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                       placeholder="300 123 4567"
+                      inputMode="tel"
+                      autoComplete="tel"
                     />
                   </div>
                 </div>
                 <div className="mt-4">
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email (para recibir tu código)
+                    Email (opcional)
                   </label>
                   <input
                     type="email"
@@ -545,6 +557,7 @@ export default function TiendaPage() {
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
                     placeholder="tu@email.com"
+                      autoComplete="email"
                   />
                 </div>
 
@@ -578,7 +591,7 @@ export default function TiendaPage() {
                       className="mt-1 w-5 h-5 text-emerald-600 border-gray-300 rounded focus:ring-emerald-500"
                     />
                     <span className="text-sm text-gray-600">
-                      Quiero recibir promociones y ofertas exclusivas por WhatsApp o email
+                      Quiero recibir promociones y ofertas exclusivas por WhatsApp
                     </span>
                   </label>
                 </div>
@@ -692,13 +705,20 @@ export default function TiendaPage() {
       <footer className="bg-gray-800 text-gray-400 py-8 mt-12">
         <div className="max-w-6xl mx-auto px-4 text-center">
           <img
-            src="/LogoMawaVerde.jpg"
-            alt="Mawa"
-            className="h-10 w-auto mx-auto mb-4 rounded"
+            src="/logo-mawa.png"
+            alt="Mawá"
+            width={44}
+            height={64}
+            className="h-16 w-auto mx-auto mb-4 rounded"
           />
-          <p>&copy; 2026 Mawa. Todos los derechos reservados.</p>
+          <p>&copy; 2026 Mawá · MAXIMIZA S.A.S. Todos los derechos reservados.</p>
           <p className="text-sm mt-2">
-            Abrimos sábados, domingos y festivos.
+            Abrimos sábados, domingos y festivos · Km 37,5 vía Ipiales – Pasto, Nariño
+          </p>
+          <p className="text-sm mt-2">
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="underline hover:text-white">WhatsApp 316 399 6541</a>
+            {' · '}
+            <a href="/politica-datos" className="underline hover:text-white">Política de datos</a>
           </p>
         </div>
       </footer>

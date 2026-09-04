@@ -1,5 +1,5 @@
 import { customAlphabet } from 'nanoid'
-import { supabase } from './supabase'
+import { getSupabase } from './supabase'
 import { FESTIVOS_2026, fechaLocalISO } from './fechas'
 
 // Genera código tipo MAWA-ABC123 (6 caracteres alfanuméricos)
@@ -107,6 +107,8 @@ export type PlanKey = string
  */
 export async function cargarPlanesBase(): Promise<PlanBase[]> {
   try {
+    const supabase = getSupabase()
+    if (!supabase) return PLANES_BASE as unknown as PlanBase[]
     const { data, error } = await supabase
       .from('planes_tipo')
       .select('key, nombre, descripcion, precio_base, precio_web, visible_tienda, categoria_tienda, tipo_tienda, incluye_tienda, destacado_tienda, edad_maxima')

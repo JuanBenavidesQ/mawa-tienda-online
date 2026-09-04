@@ -1,9 +1,13 @@
 'use client'
 
 import { useSearchParams } from 'next/navigation'
+import Link from 'next/link'
 import { Suspense, useEffect, useState } from 'react'
 import { trackCompra, type ItemCompra } from '@/lib/analytics'
 import { WHATSAPP_URL } from '@/lib/site'
+import Header from '@/components/tienda/Header'
+import Footer from '@/components/tienda/Footer'
+import { IconoWhatsApp } from '@/components/tienda/Iconos'
 
 type EstadoPago = 'consultando' | 'confirmado' | 'verificando'
 
@@ -115,16 +119,12 @@ function ExitoContent() {
   // Mostrar loading mientras se confirma el pago
   if (estadoPago === 'consultando') {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex flex-col">
-        <header className="bg-emerald-800 text-white py-3">
-          <div className="max-w-6xl mx-auto px-4">
-            <img src="/logo-mawa.png" alt="Mawá" className="h-12 w-auto rounded" />
-          </div>
-        </header>
+      <div className="min-h-screen flex flex-col">
+        <Header solido />
         <main className="flex-1 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600 mx-auto mb-4"></div>
-            <p className="text-gray-600">Confirmando tu pago...</p>
+          <div className="bg-white rounded-3xl shadow-xl shadow-mawa-verde-900/10 p-8 max-w-md w-full text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mawa-verde-700 mx-auto mb-4"></div>
+            <p className="text-mawa-gris">Confirmando tu pago...</p>
           </div>
         </main>
       </div>
@@ -132,35 +132,29 @@ function ExitoContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-emerald-50 to-white flex flex-col">
-      {/* Header */}
-      <header className="bg-emerald-800 text-white py-3">
-        <div className="max-w-6xl mx-auto px-4 flex items-center gap-3">
-          <img src="/logo-mawa.png" alt="Mawá" className="h-12 w-auto rounded" />
-          <span className="text-xl font-bold">Mawá</span>
-        </div>
-      </header>
+    <div className="min-h-screen flex flex-col">
+      <Header solido />
 
       {/* Contenido */}
-      <main className="flex-1 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-md w-full text-center">
+      <main className="flex-1 flex items-center justify-center p-4 py-10">
+        <div className="bg-white rounded-3xl shadow-xl shadow-mawa-verde-900/10 p-6 sm:p-8 max-w-md w-full text-center">
           {/* Icono de éxito */}
-          <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-            <svg className="w-10 h-10 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-20 h-20 bg-mawa-crema rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg className="w-10 h-10 text-mawa-verde-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
             </svg>
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-800 mb-2">
+          <h1 className="font-display text-3xl font-bold text-mawa-verde-900 mb-2">
             ¡Compra exitosa!
           </h1>
           {estadoPago === 'confirmado' ? (
-            <p className="text-gray-600 mb-8">
+            <p className="text-mawa-gris mb-8">
               Tu entrada a Mawá está confirmada. Te enviamos el código por WhatsApp al celular que registraste.
             </p>
           ) : (
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 mb-8 text-left">
-              <p className="text-sm text-amber-800">
+            <div className="bg-mawa-crema border border-mawa-arena/60 rounded-xl p-3 mb-8 text-left">
+              <p className="text-sm text-mawa-ink">
                 Tu pago está siendo verificado con el banco. Tu código quedará
                 activo automáticamente en unos minutos y te lo enviaremos por
                 WhatsApp. Guárdalo y preséntalo en la entrada con toda confianza.
@@ -169,37 +163,37 @@ function ExitoContent() {
           )}
 
           {/* Código */}
-          <div className="bg-emerald-50 rounded-2xl p-6 mb-6">
-            <p className="text-sm text-emerald-600 font-medium mb-2">Tu código de acceso</p>
-            <div className="bg-white rounded-xl p-4 border-2 border-dashed border-emerald-300">
-              <span className="text-2xl sm:text-3xl font-mono font-bold text-emerald-700 tracking-wider whitespace-nowrap">
+          <div className="bg-mawa-crema/70 rounded-2xl p-6 mb-6">
+            <p className="text-sm text-mawa-verde-700 font-semibold mb-2">Tu código de acceso</p>
+            <div className="bg-white rounded-xl p-4 border-2 border-dashed border-mawa-verde-500/60">
+              <span className="text-2xl sm:text-3xl font-mono font-bold text-mawa-verde-900 tracking-wider whitespace-nowrap">
                 {codigo}
               </span>
             </div>
           </div>
 
           {/* Detalles */}
-          <div className="text-left bg-gray-50 rounded-xl p-4 mb-6">
-            <div className="flex justify-between py-2 border-b border-gray-200">
-              <span className="text-gray-600">Plan</span>
-              <span className="font-medium text-gray-800 text-right">{plan}</span>
+          <div className="text-left bg-mawa-crema/40 rounded-xl p-4 mb-6">
+            <div className="flex justify-between py-2 border-b border-mawa-verde-900/10">
+              <span className="text-mawa-gris">Plan</span>
+              <span className="font-medium text-mawa-ink text-right">{plan}</span>
             </div>
-            <div className="flex justify-between py-2 border-b border-gray-200">
-              <span className="text-gray-600">Personas</span>
-              <span className="font-medium text-gray-800">{cantidad}</span>
+            <div className="flex justify-between py-2 border-b border-mawa-verde-900/10">
+              <span className="text-mawa-gris">Personas</span>
+              <span className="font-medium text-mawa-ink">{cantidad}</span>
             </div>
             {fechaVisita && (
-              <div className="flex justify-between py-2 border-b border-gray-200">
-                <span className="text-gray-600">Fecha planeada</span>
-                <span className="font-medium text-gray-800 text-right text-sm">
+              <div className="flex justify-between py-2 border-b border-mawa-verde-900/10">
+                <span className="text-mawa-gris">Fecha planeada</span>
+                <span className="font-medium text-mawa-ink text-right text-sm">
                   {formatearFecha(fechaVisita)}
                 </span>
               </div>
             )}
             {validoHasta && (
               <div className="flex justify-between py-2">
-                <span className="text-gray-600">Válido hasta</span>
-                <span className="font-medium text-gray-800 text-right text-sm">
+                <span className="text-mawa-gris">Válido hasta</span>
+                <span className="font-medium text-mawa-ink text-right text-sm">
                   {formatearFecha(validoHasta)}
                 </span>
               </div>
@@ -207,9 +201,9 @@ function ExitoContent() {
           </div>
 
           {/* Instrucciones */}
-          <div className="bg-yellow-50 rounded-xl p-4 text-left mb-6">
-            <h2 className="font-bold text-yellow-800 mb-2">Importante</h2>
-            <ul className="text-sm text-yellow-700 space-y-1">
+          <div className="bg-mawa-crema rounded-xl p-4 text-left mb-6">
+            <h2 className="font-bold text-mawa-verde-900 mb-2">Importante</h2>
+            <ul className="text-sm text-mawa-ink space-y-1">
               <li>1. Guarda o toma captura de este código.</li>
               <li>2. Preséntalo en la entrada de Mawá.</li>
               <li>3. Recibirás tu manilla de acceso.</li>
@@ -222,7 +216,7 @@ function ExitoContent() {
             <button
               type="button"
               onClick={copiarCodigo}
-              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition-colors"
+              className="w-full bg-mawa-gradient hover:brightness-110 text-white font-bold py-3 px-6 rounded-full transition"
             >
               {copiado ? '¡Código copiado!' : 'Copiar código'}
             </button>
@@ -230,27 +224,21 @@ function ExitoContent() {
               href={`${WHATSAPP_URL}?text=${encodeURIComponent(`Hola, compré en la tienda web y mi código es ${codigo}. Tengo una duda:`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="block w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl transition-colors"
+              className="flex items-center justify-center gap-2 w-full bg-whatsapp hover:bg-[#1ebe5b] text-white font-semibold py-3 px-6 rounded-full transition-colors"
             >
-              ¿Dudas? Escríbenos por WhatsApp
+              <IconoWhatsApp /> ¿Dudas? Escríbenos por WhatsApp
             </a>
-            <a
+            <Link
               href="/"
-              className="block w-full text-gray-500 hover:text-gray-700 font-medium py-2 text-sm"
+              className="block w-full text-mawa-gris hover:text-mawa-ink font-medium py-2 text-sm"
             >
               Comprar otra entrada
-            </a>
+            </Link>
           </div>
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-800 text-gray-400 py-6">
-        <div className="max-w-6xl mx-auto px-4 text-center text-sm">
-          <p>Te enviamos el código por WhatsApp al celular que registraste.</p>
-          <p className="mt-2">&copy; 2026 Mawá · Km 37,5 vía Ipiales – Pasto</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
@@ -259,7 +247,7 @@ export default function ExitoPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mawa-verde-700"></div>
       </div>
     }>
       <ExitoContent />

@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import Header from '@/components/tienda/Header'
+import Footer from '@/components/tienda/Footer'
 
 export const metadata = {
   title: 'Política de Tratamiento de Datos | Mawa',
@@ -7,16 +9,8 @@ export const metadata = {
 
 export default function PoliticaDatosPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-emerald-800 text-white py-4">
-        <div className="max-w-4xl mx-auto px-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/LogoMawaVerde.jpg" alt="Mawa" className="h-10 w-auto rounded" />
-            <span className="font-bold text-xl">MAWÁ</span>
-          </Link>
-        </div>
-      </header>
+    <div className="min-h-screen">
+      <Header solido />
 
       {/* Contenido */}
       <main className="max-w-4xl mx-auto px-4 py-8">
@@ -26,21 +20,21 @@ export default function PoliticaDatosPage() {
             <p className="text-gray-600 font-medium">MAXIMIZA S.A.S.</p>
             <p className="text-gray-500">NIT 900.490.382-4</p>
             <p className="text-gray-500">Nombre comercial: Mawá</p>
-            <h1 className="text-2xl font-bold text-gray-800 mt-4">
+            <h1 className="font-display text-2xl font-bold text-mawa-verde-900 mt-4">
               POLÍTICA DE TRATAMIENTO Y PROTECCIÓN DE DATOS PERSONALES
             </h1>
             <p className="text-sm text-gray-500 mt-2">
               En cumplimiento de la Ley Estatutaria 1581 de 2012, el Decreto Reglamentario 1377 de 2013 y demás normas concordantes
             </p>
-            <p className="text-sm text-emerald-600 mt-4">www.mawa.com.co</p>
+            <p className="text-sm text-mawa-verde-700 mt-4">www.mawa.com.co</p>
             <p className="text-sm text-gray-500">Fecha de entrada en vigencia: febrero de 2026</p>
             <p className="text-sm text-gray-500">Versión 1.0</p>
           </div>
 
-          <div className="prose prose-emerald max-w-none text-gray-700 space-y-6">
+          <div className="prose max-w-none text-gray-700 space-y-6">
             {/* Sección 1 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 1. IDENTIFICACIÓN DEL RESPONSABLE DEL TRATAMIENTO
               </h2>
               <p>
@@ -66,7 +60,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 2 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 2. MARCO LEGAL
               </h2>
               <p>La presente política se rige por la normatividad colombiana vigente en materia de protección de datos personales, principalmente:</p>
@@ -83,7 +77,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 3 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 3. DEFINICIONES
               </h2>
               <p>Para efectos de la presente política, se adoptan las siguientes definiciones conforme a la Ley 1581 de 2012 y el Decreto 1377 de 2013:</p>
@@ -107,7 +101,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 4 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 4. PRINCIPIOS RECTORES DEL TRATAMIENTO
               </h2>
               <p>MAXIMIZA S.A.S. aplicará los siguientes principios en el tratamiento de datos personales, conforme al artículo 4 de la Ley 1581 de 2012:</p>
@@ -125,7 +119,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 5 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 5. TRATAMIENTO Y FINALIDADES
               </h2>
               <p>MAXIMIZA S.A.S., a través de su establecimiento comercial Mawá (www.mawa.com.co), recolecta y trata datos personales para las siguientes finalidades, según el tipo de titular:</p>
@@ -161,7 +155,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 6 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 6. DATOS PERSONALES QUE SE RECOLECTAN
               </h2>
               <p>Dependiendo de la relación con el titular, MAXIMIZA S.A.S. podrá recolectar los siguientes tipos de datos personales:</p>
@@ -193,7 +187,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 7 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 7. AUTORIZACIÓN PARA EL TRATAMIENTO DE DATOS PERSONALES
               </h2>
               <p>MAXIMIZA S.A.S. obtendrá la autorización previa, expresa e informada del titular para el tratamiento de sus datos personales. Esta autorización podrá ser otorgada a través de:</p>
@@ -221,7 +215,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 8 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 8. DERECHOS DE LOS TITULARES
               </h2>
               <p>De conformidad con el artículo 8 de la Ley 1581 de 2012, los titulares de los datos personales tienen los siguientes derechos:</p>
@@ -237,7 +231,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 9 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 9. PROCEDIMIENTO PARA EJERCER LOS DERECHOS
               </h2>
               <p>Los titulares podrán ejercer sus derechos de consulta, reclamo, actualización, rectificación, revocatoria y supresión de datos a través de los siguientes canales:</p>
@@ -264,7 +258,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 10 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 10. DEBERES DE MAXIMIZA S.A.S. COMO RESPONSABLE DEL TRATAMIENTO
               </h2>
               <p>En su calidad de responsable del tratamiento, MAXIMIZA S.A.S. se compromete a:</p>
@@ -283,7 +277,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 11 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 11. MEDIDAS DE SEGURIDAD
               </h2>
               <p>MAXIMIZA S.A.S. adoptará las medidas técnicas, humanas y administrativas necesarias para garantizar la seguridad de los datos personales, evitando su adulteración, pérdida, consulta, uso o acceso no autorizado. Entre las medidas implementadas se encuentran:</p>
@@ -301,7 +295,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 12 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 12. TRANSFERENCIA Y TRANSMISIÓN DE DATOS A TERCEROS
               </h2>
               <p>MAXIMIZA S.A.S. podrá transmitir datos personales a terceros encargados del tratamiento que le presten servicios necesarios para el desarrollo de su objeto social, tales como:</p>
@@ -317,7 +311,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 13 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 13. POLÍTICA DE COOKIES
               </h2>
               <p>El sitio web www.mawa.com.co utiliza cookies y tecnologías similares para mejorar la experiencia del usuario, analizar el tráfico web y personalizar el contenido. Al navegar en el sitio, el usuario podrá aceptar o rechazar el uso de cookies no esenciales mediante el banner de cookies desplegado en su primera visita.</p>
@@ -332,7 +326,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 14 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 14. SISTEMA DE VIDEOVIGILANCIA (CIRCUITO CERRADO DE TELEVISIÓN)
               </h2>
               <p>MAXIMIZA S.A.S. opera un sistema de videovigilancia mediante circuito cerrado de televisión (CCTV) en las instalaciones de Mawá con el propósito de garantizar la seguridad de las personas, los bienes y las instalaciones del establecimiento. Las imágenes captadas a través de este sistema constituyen datos personales de naturaleza biométrica y, en consecuencia, su tratamiento se rige por la Ley 1581 de 2012, el Decreto 1377 de 2013 y la Guía sobre Protección de Datos Personales en Sistemas de Videovigilancia expedida por la Superintendencia de Industria y Comercio.</p>
@@ -395,7 +389,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 15 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 15. VIGENCIA DE LAS BASES DE DATOS Y RETENCIÓN DE DATOS
               </h2>
               <p>Los datos personales serán tratados por MAXIMIZA S.A.S. durante el tiempo que sea razonablemente necesario para cumplir con las finalidades que justificaron su recolección, conforme a las disposiciones legales aplicables. En particular:</p>
@@ -410,7 +404,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 16 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 16. MODIFICACIONES A LA POLÍTICA
               </h2>
               <p>MAXIMIZA S.A.S. se reserva el derecho de modificar la presente política en cualquier momento. Cualquier cambio sustancial será comunicado oportunamente a los titulares mediante publicación en el sitio web www.mawa.com.co y, cuando sea necesario, a través de los medios de contacto suministrados por los titulares.</p>
@@ -419,7 +413,7 @@ export default function PoliticaDatosPage() {
 
             {/* Sección 17 */}
             <section>
-              <h2 className="text-xl font-semibold text-gray-800 mt-6 mb-3">
+              <h2 className="font-display text-xl font-semibold text-mawa-verde-900 mt-6 mb-3">
                 17. VIGENCIA
               </h2>
               <p>La presente política de tratamiento de datos personales fue aprobada y entra en vigencia a partir de su publicación en el sitio web www.mawa.com.co en el mes de febrero de 2026.</p>
@@ -435,7 +429,7 @@ export default function PoliticaDatosPage() {
           <div className="mt-8 pt-6 border-t">
             <Link
               href="/"
-              className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-medium"
+              className="inline-flex items-center gap-2 text-mawa-verde-700 hover:text-mawa-verde-900 font-medium"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -446,12 +440,7 @@ export default function PoliticaDatosPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-gray-800 text-gray-400 py-6 mt-12">
-        <div className="max-w-4xl mx-auto px-4 text-center text-sm">
-          <p>&copy; 2026 Mawá. Todos los derechos reservados.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }

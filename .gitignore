@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Fotos originales (pesadas): solo las versiones WebP en public/fotos van al repo
+/brand/fotos-originales/

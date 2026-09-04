@@ -1,21 +1,26 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Playfair_Display, Source_Sans_3 } from "next/font/google";
 import Analytics from "@/components/Analytics";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Tipografía alineada al sitio principal mawa.com.co
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
   subsets: ["latin"],
+  weight: ["600", "700"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const sourceSans = Source_Sans_3({
+  variable: "--font-source-sans",
   subsets: ["latin"],
+  weight: ["400", "600", "700"],
+  display: "swap",
 });
 
 const DESCRIPCION =
-  "Compra tu entrada a Mawá con descuento y llega directo a la piscina. Piscinas y toboganes, puentes tibetanos, almuerzo incluido. Centro campestre en el Km 37,5 vía Ipiales – Pasto, Nariño.";
+  "Compra tu entrada a Mawá con descuento y sin filas. Piscinas y toboganes, puentes tibetanos y almuerzo incluido. Centro campestre en el Km 37,5 vía Ipiales – Pasto, Nariño.";
 
 // Verificación de dominio de Meta (Configuración del negocio → Dominios →
 // etiqueta meta). Se activa poniendo el valor en Vercel; sin él no se emite.
@@ -45,7 +50,7 @@ export const metadata: Metadata = {
     locale: "es_CO",
     url: SITE_URL,
     siteName: "Mawá",
-    title: "Compra tu entrada a Mawá con descuento",
+    title: "Compra tu entrada a Mawá con descuento y sin filas",
     description: DESCRIPCION,
     images: [
       {
@@ -58,7 +63,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Compra tu entrada a Mawá con descuento",
+    title: "Compra tu entrada a Mawá con descuento y sin filas",
     description: DESCRIPCION,
     images: ["/og.jpg"],
   },
@@ -72,7 +77,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#065f46",
+  themeColor: "#1b4332",
   colorScheme: "light",
 };
 
@@ -82,10 +87,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="es" className={`${playfair.variable} ${sourceSans.variable}`}>
+      <body className="antialiased">
         {children}
         <Analytics />
       </body>

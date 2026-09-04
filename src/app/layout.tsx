@@ -20,7 +20,7 @@ const sourceSans = Source_Sans_3({
 });
 
 const DESCRIPCION =
-  "Compra tu entrada a Mawá con descuento y llega directo a la piscina. Piscinas y toboganes, puentes tibetanos, almuerzo incluido. Centro campestre en el Km 37,5 vía Ipiales – Pasto, Nariño.";
+  "Compra tu entrada a Mawá con descuento y sin filas. Piscinas y toboganes, puentes tibetanos y almuerzo incluido. Centro campestre en el Km 37,5 vía Ipiales – Pasto, Nariño.";
 
 // Verificación de dominio de Meta (Configuración del negocio → Dominios →
 // etiqueta meta). Se activa poniendo el valor en Vercel; sin él no se emite.
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     locale: "es_CO",
     url: SITE_URL,
     siteName: "Mawá",
-    title: "Compra tu entrada a Mawá con descuento",
+    title: "Compra tu entrada a Mawá con descuento y sin filas",
     description: DESCRIPCION,
     images: [
       {
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Compra tu entrada a Mawá con descuento",
+    title: "Compra tu entrada a Mawá con descuento y sin filas",
     description: DESCRIPCION,
     images: ["/og.jpg"],
   },

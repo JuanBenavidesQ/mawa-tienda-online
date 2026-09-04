@@ -21,11 +21,11 @@ export default function Hero() {
           {LUGAR.direccionCorta}
         </p>
         <h1 className="font-display text-4xl sm:text-6xl font-bold leading-[1.05] max-w-3xl drop-shadow-lg">
-          Compra tu entrada a Mawá y llega directo a la piscina
+          Compra tu entrada a Mawá con descuento y sin filas
         </h1>
         <p className="mt-5 text-lg sm:text-xl text-white/90 max-w-2xl">
           Piscinas y toboganes, puentes tibetanos y almuerzo incluido, en el corazón de la montaña nariñense.
-          Comprando online tienes descuento y tu código llega por WhatsApp al instante.
+          Paga en línea, recibe tu código por WhatsApp al instante y preséntalo en la entrada.
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:items-center">

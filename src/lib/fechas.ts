@@ -19,11 +19,23 @@ export const FESTIVOS_2026 = [
 ]
 
 /**
- * Verifica si una fecha es dia de apertura (sabado, domingo o festivo)
+ * 'YYYY-MM-DD' de la fecha en la zona horaria LOCAL del navegador. Antes se
+ * usaba toISOString() (UTC): a un cliente fuera de Colombia le podía correr
+ * el día y marcar mal los festivos.
+ */
+export function fechaLocalISO(fecha: Date): string {
+  const y = fecha.getFullYear()
+  const m = String(fecha.getMonth() + 1).padStart(2, '0')
+  const d = String(fecha.getDate()).padStart(2, '0')
+  return `${y}-${m}-${d}`
+}
+
+/**
+ * Verifica si una fecha es día de apertura (sábado, domingo o festivo)
  */
 export function esDiaApertura(fecha: Date): boolean {
-  const diaSemana = fecha.getDay() // 0 = domingo, 6 = sabado
-  const fechaStr = fecha.toISOString().split('T')[0]
+  const diaSemana = fecha.getDay() // 0 = domingo, 6 = sábado
+  const fechaStr = fechaLocalISO(fecha)
 
   // Sabado o domingo
   if (diaSemana === 0 || diaSemana === 6) {
@@ -97,12 +109,12 @@ export function formatearFechaCorta(fecha: Date): string {
  */
 export function tipoDia(fecha: Date): string {
   const diaSemana = fecha.getDay()
-  const fechaStr = fecha.toISOString().split('T')[0]
+  const fechaStr = fechaLocalISO(fecha)
 
   if (FESTIVOS_2026.includes(fechaStr)) {
     return 'Festivo'
   }
   if (diaSemana === 0) return 'Domingo'
-  if (diaSemana === 6) return 'Sabado'
+  if (diaSemana === 6) return 'Sábado'
   return ''
 }

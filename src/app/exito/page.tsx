@@ -228,6 +228,9 @@ function ExitoContent() {
             >
               <IconoWhatsApp /> ¿Dudas? Escríbenos por WhatsApp
             </a>
+            <Link href="/mi-codigo" className="block w-full text-mawa-gris hover:text-mawa-ink font-medium py-2 text-sm">
+              ¿No te llegó el WhatsApp? Reenviar mi código
+            </Link>
             <Link
               href="/"
               className="block w-full text-mawa-gris hover:text-mawa-ink font-medium py-2 text-sm"

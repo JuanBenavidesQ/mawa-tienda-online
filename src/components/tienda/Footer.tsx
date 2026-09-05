@@ -27,6 +27,7 @@ export default function Footer() {
             <IconoInstagram className="w-4 h-4 text-mawa-verde-400" /> {LUGAR.instagramUsuario}
           </a>
           <a href={LUGAR.sitio} target="_blank" rel="noopener noreferrer" className="block hover:text-white">www.mawa.com.co</a>
+          <Link href="/mi-codigo" className="block hover:text-white">¿Perdiste tu código? Recupéralo aquí</Link>
           <Link href="/politica-datos" className="block hover:text-white">Política de tratamiento de datos</Link>
         </div>
       </div>

@@ -14,6 +14,7 @@ import crypto from 'crypto'
 import { customAlphabet } from 'nanoid'
 import { getSupabaseAdmin } from '@/lib/supabase-admin'
 import { calcularFechaVencimiento } from '@/lib/fechas'
+import { cargarFechasCerradas, cierreDelDia } from '@/lib/fechasCerradas'
 
 const generarId = customAlphabet('ABCDEFGHJKLMNPQRSTUVWXYZ23456789', 6)
 
@@ -106,7 +107,7 @@ export async function POST(request: NextRequest) {
     // ---- Precio SERVER-SIDE desde el catálogo (fuente única de verdad) ----
     const { data: planes, error: errPlanes } = await admin
       .from('planes_tipo')
-      .select('key, nombre, precio_base, precio_web')
+      .select('key, nombre, precio_base, precio_web, tipo_tienda')
       .eq('activo', true)
       .eq('visible_tienda', true)
 
@@ -138,6 +139,22 @@ export async function POST(request: NextRequest) {
       detalle.push({ key, nombre: plan.nombre, cantidad, precioUnitario, subtotal })
       total += subtotal
       personas += cantidad
+    }
+
+    // ---- Fechas cerradas (exclusividades): guarda server-side, además del
+    // trigger de Supabase en codigos_plan. La tienda vende 1 noche por reserva.
+    const cierres = await cargarFechasCerradas(admin)
+    if (cierres.length > 0) {
+      const tipos = new Set(cantidades.map((c) => porKey.get(c.key)?.tipo_tienda))
+      const alcances = [tipos.has('alojamiento') && 'ALOJAMIENTO', tipos.has('pasadia') && 'PASADIA'].filter(Boolean) as Array<'ALOJAMIENTO' | 'PASADIA'>
+      for (const alcance of alcances) {
+        if (cierreDelDia(cierres, fecha, alcance)) {
+          return NextResponse.json(
+            { ok: false, error: 'Esa fecha no está disponible por un evento privado. Elige otra fecha o escríbenos por WhatsApp.' },
+            { status: 409 }
+          )
+        }
+      }
     }
 
     if (personas > MAX_PERSONAS) {

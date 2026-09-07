@@ -22,6 +22,8 @@ import {
 import BoldPayButton from '@/components/BoldPayButton'
 import { trackInicioPago } from '@/lib/analytics'
 import { WHATSAPP_URL } from '@/lib/site'
+import { getSupabase } from '@/lib/supabase'
+import { cargarFechasCerradas, cierreDelDia, type FechaCerrada } from '@/lib/fechasCerradas'
 import { INCLUYE_FALLBACK, RESUMEN_FALLBACK } from '@/lib/contenido'
 import { IconoCheck, IconoEscudo, IconoWhatsApp } from './Iconos'
 
@@ -156,6 +158,8 @@ export default function Comprar() {
   const [integrityHash, setIntegrityHash] = useState('')
   const [boldReady, setBoldReady] = useState(false)
   const [mostrarMensajeGrupal, setMostrarMensajeGrupal] = useState(false)
+  // Fechas cerradas (exclusividades): no se ofrecen en el calendario.
+  const [fechasCerradas, setFechasCerradas] = useState<FechaCerrada[]>([])
 
   const refFecha = useRef<HTMLElement>(null)
   const refDatos = useRef<HTMLElement>(null)
@@ -163,9 +167,10 @@ export default function Comprar() {
   useEffect(() => {
     let activo = true
     async function cargarTodo() {
-      const planesBase = await cargarPlanesBase()
+      const [planesBase, cierres] = await Promise.all([cargarPlanesBase(), cargarFechasCerradas(getSupabase())])
       if (!activo) return
       setPlanes(aplicarPreciosWeb(planesBase))
+      setFechasCerradas(cierres)
       setCargandoPrecios(false)
     }
     cargarTodo()
@@ -174,11 +179,13 @@ export default function Comprar() {
     }
   }, [])
 
-  const fechasDisponibles = useMemo(() => {
+  const { fechasDisponibles, hayFechasCerradas } = useMemo(() => {
     const fechas = obtenerFechasDisponibles(30)
-    if (tabActivo === 'alojamiento') return fechas.filter(esFechaValidaAlojamiento)
-    return fechas.slice(0, 15)
-  }, [tabActivo])
+    const base = tabActivo === 'alojamiento' ? fechas.filter(esFechaValidaAlojamiento) : fechas.slice(0, 15)
+    const alcance = tabActivo === 'alojamiento' ? 'ALOJAMIENTO' : 'PASADIA'
+    const abiertas = base.filter((f) => !cierreDelDia(fechasCerradas, f, alcance))
+    return { fechasDisponibles: abiertas, hayFechasCerradas: abiertas.length !== base.length }
+  }, [tabActivo, fechasCerradas])
 
   const totales = useMemo(() => calcularTotalCarrito(selecciones, planes), [selecciones, planes])
   const haySeleccion = totales.cantidadPersonas > 0
@@ -436,6 +443,11 @@ export default function Comprar() {
                 {tabActivo === 'alojamiento' && (
                   <p className="text-sm text-mawa-marron bg-mawa-crema p-3 rounded-xl mb-4">
                     El alojamiento está disponible sábados y domingos de puente festivo.
+                  </p>
+                )}
+                {hayFechasCerradas && (
+                  <p className="text-sm text-mawa-gris mb-4">
+                    Algunas fechas no aparecen porque tenemos eventos privados ese día.
                   </p>
                 )}
                 <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">

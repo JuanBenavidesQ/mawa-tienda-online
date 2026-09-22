@@ -31,6 +31,23 @@ export function fechaLocalISO(fecha: Date): string {
 }
 
 /**
+ * Convierte lo que devuelve la API a Date sin correr el día. `fecha_visita` y
+ * `valido_hasta` son columnas `date` en Supabase ("2026-09-26"): con
+ * `new Date("2026-09-26")` JS asume medianoche UTC, que en Bogotá es las 7 pm
+ * del día ANTERIOR, y /exito mostraba "viernes 25" para un sábado 26. Un valor
+ * solo-día se ancla al mediodía UTC (mismo día en cualquier zona horaria); un
+ * timestamp completo se respeta tal cual.
+ */
+export function parsearFechaApi(valor: string | null | undefined): Date | null {
+  if (!valor) return null
+  const soloDia = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor.trim())
+  const fecha = soloDia
+    ? new Date(Date.UTC(Number(soloDia[1]), Number(soloDia[2]) - 1, Number(soloDia[3]), 12))
+    : new Date(valor)
+  return isNaN(fecha.getTime()) ? null : fecha
+}
+
+/**
  * Verifica si una fecha es día de apertura (sábado, domingo o festivo)
  */
 export function esDiaApertura(fecha: Date): boolean {

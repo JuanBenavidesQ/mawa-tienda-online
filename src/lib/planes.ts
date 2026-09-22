@@ -45,7 +45,7 @@ export const PLANES_BASE = [
     nombre: 'Travesía',
     descripcion: 'Piscinas y toboganes + Puentes tibetanos + bebida de bienvenida + almuerzo + bebida + postre',
     precioBase: 80000,
-    precioWeb: 76000,
+    precioWeb: 72000,
     categoria: 'adulto' as CategoriaPlanes,
     tipo: 'pasadia' as TipoPlan,
     incluye: ['Piscinas y toboganes', 'Puentes tibetanos', 'Bebida de bienvenida', 'Almuerzo', 'Bebida', 'Postre'],

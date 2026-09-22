@@ -1,5 +1,6 @@
 import { FAQS } from '@/lib/contenido'
 import { WHATSAPP_URL, WHATSAPP_VISIBLE } from '@/lib/site'
+import Link from 'next/link'
 import { IconoWhatsApp } from './Iconos'
 
 export default function Faq() {
@@ -17,7 +18,15 @@ export default function Faq() {
                 +
               </span>
             </summary>
-            <p className="mt-3 pr-12 text-mawa-gris leading-relaxed">{f.respuesta}</p>
+            <p className="mt-3 pr-12 text-mawa-gris leading-relaxed">
+              {f.respuesta}
+              {f.enlace && (
+                <>
+                  {' '}
+                  <Link href={f.enlace.href} className="text-mawa-verde-700 underline font-semibold">{f.enlace.texto}</Link>
+                </>
+              )}
+            </p>
           </details>
         ))}
       </div>

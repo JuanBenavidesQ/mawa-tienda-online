@@ -84,7 +84,7 @@ export const PASOS = [
   },
 ]
 
-export type Faq = { pregunta: string; respuesta: string }
+export type Faq = { pregunta: string; respuesta: string; enlace?: { href: string; texto: string } }
 
 export const FAQS: Faq[] = [
   {
@@ -101,7 +101,8 @@ export const FAQS: Faq[] = [
   },
   {
     pregunta: '¿Cómo recibo la entrada después de pagar?',
-    respuesta: 'Al confirmarse el pago te mostramos el código en pantalla y te lo enviamos por WhatsApp al celular que registraste. En la entrada lo presentas y recibes tu manilla de acceso.',
+    respuesta: 'Al confirmarse el pago te mostramos el código en pantalla y te lo enviamos por WhatsApp al celular que registraste. En la entrada lo presentas y recibes tu manilla de acceso. Si lo pierdes, te lo reenviamos.',
+    enlace: { href: '/mi-codigo', texto: 'Recuperar mi código' },
   },
   {
     pregunta: '¿Qué incluye el almuerzo?',

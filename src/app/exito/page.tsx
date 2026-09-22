@@ -8,6 +8,7 @@ import { WHATSAPP_URL } from '@/lib/site'
 import Header from '@/components/tienda/Header'
 import Footer from '@/components/tienda/Footer'
 import { IconoWhatsApp } from '@/components/tienda/Iconos'
+import { parsearFechaApi } from '@/lib/fechas'
 
 type EstadoPago = 'consultando' | 'confirmado' | 'verificando'
 
@@ -90,12 +91,8 @@ function ExitoContent() {
 
   const plan = resumen?.planNombre || planParam
   const cantidad = resumen?.personas || cantidadParam
-  const fechaVisita = resumen?.fechaVisita
-    ? new Date(resumen.fechaVisita)
-    : fechaVisitaParam
-      ? new Date(fechaVisitaParam)
-      : null
-  const validoHasta = resumen?.validoHasta ? new Date(resumen.validoHasta) : null
+  const fechaVisita = parsearFechaApi(resumen?.fechaVisita) ?? parsearFechaApi(fechaVisitaParam)
+  const validoHasta = parsearFechaApi(resumen?.validoHasta)
 
   const formatearFecha = (fecha: Date) =>
     fecha.toLocaleDateString('es-CO', {

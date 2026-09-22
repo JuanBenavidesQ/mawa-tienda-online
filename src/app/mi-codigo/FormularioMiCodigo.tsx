@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { WHATSAPP_URL } from '@/lib/site'
 import { IconoWhatsApp } from '@/components/tienda/Iconos'
+import { parsearFechaApi } from '@/lib/fechas'
 
 type CodigoResumen = {
   codigoEnmascarado: string
@@ -22,8 +23,9 @@ const ETIQUETA_ESTADO: Record<CodigoResumen['estado'], { texto: string; clase: s
 }
 
 function fecha(iso: string | null) {
-  if (!iso) return null
-  return new Date(iso).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Bogota' })
+  const d = parsearFechaApi(iso)
+  if (!d) return null
+  return d.toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'America/Bogota' })
 }
 
 export default function FormularioMiCodigo() {

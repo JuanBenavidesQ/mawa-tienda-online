@@ -1,6 +1,6 @@
 import { customAlphabet } from 'nanoid'
 import { getSupabase } from './supabase'
-import { FESTIVOS_2026, fechaLocalISO } from './fechas'
+import { FESTIVOS, fechaLocalISO } from './fechas'
 
 // Genera código tipo MAWA-ABC123 (6 caracteres alfanuméricos)
 const generateId = customAlphabet('ABCDEFGHJKLMNPQRSTUVWXYZ23456789', 6)
@@ -181,7 +181,7 @@ export function filtrarPlanesPorTipo(planes: PlanConPrecio[], tipo: TipoPlan): P
   return planes.filter((plan) => plan.tipo === tipo)
 }
 
-// Festivos: única fuente en fechas.ts (FESTIVOS_2026)
+// Festivos: única fuente en fechas.ts (FESTIVOS)
 
 // Verifica si un domingo es parte de un puente festivo (lunes festivo)
 export function esPuenteFestivo(fecha: Date): boolean {
@@ -189,7 +189,7 @@ export function esPuenteFestivo(fecha: Date): boolean {
   if (fecha.getDay() === 0) {
     const lunes = new Date(fecha)
     lunes.setDate(lunes.getDate() + 1)
-    return FESTIVOS_2026.includes(fechaLocalISO(lunes))
+    return FESTIVOS.includes(fechaLocalISO(lunes))
   }
   return false
 }

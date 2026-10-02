@@ -147,21 +147,21 @@ function ExitoContent() {
           </h1>
           {estadoPago === 'confirmado' ? (
             <p className="text-mawa-gris mb-8">
-              Tu entrada a Mawá está confirmada. Te enviamos el código por WhatsApp al celular que registraste.
+              Tu entrada a Mawá está confirmada. Te enviamos el número de compra por WhatsApp al celular que registraste.
             </p>
           ) : (
             <div className="bg-mawa-crema border border-mawa-arena/60 rounded-xl p-3 mb-8 text-left">
               <p className="text-sm text-mawa-ink">
-                Tu pago está siendo verificado con el banco. Tu código quedará
-                activo automáticamente en unos minutos y te lo enviaremos por
-                WhatsApp. Guárdalo y preséntalo en la entrada con toda confianza.
+                Tu pago está siendo verificado con el banco. Tu compra quedará
+                activa automáticamente en unos minutos y te enviaremos el número
+                de compra por WhatsApp. Guárdalo e indícalo en recepción con toda confianza.
               </p>
             </div>
           )}
 
-          {/* Código */}
+          {/* Número de compra */}
           <div className="bg-mawa-crema/70 rounded-2xl p-6 mb-6">
-            <p className="text-sm text-mawa-verde-700 font-semibold mb-2">Tu código de acceso</p>
+            <p className="text-sm text-mawa-verde-700 font-semibold mb-2">Tu número de compra</p>
             <div className="bg-white rounded-xl p-4 border-2 border-dashed border-mawa-verde-500/60">
               <span className="text-2xl sm:text-3xl font-mono font-bold text-mawa-verde-900 tracking-wider whitespace-nowrap">
                 {codigo}
@@ -201,8 +201,8 @@ function ExitoContent() {
           <div className="bg-mawa-crema rounded-xl p-4 text-left mb-6">
             <h2 className="font-bold text-mawa-verde-900 mb-2">Importante</h2>
             <ul className="text-sm text-mawa-ink space-y-1">
-              <li>1. Guarda o toma captura de este código.</li>
-              <li>2. Preséntalo en la entrada de Mawá.</li>
+              <li>1. Guarda o toma captura de este número de compra.</li>
+              <li>2. Al llegar a Mawá, indícalo en recepción.</li>
               <li>3. Recibirás tu manilla de acceso.</li>
               <li>4. Puedes usarlo cualquier sábado, domingo o festivo hasta la fecha de validez.</li>
             </ul>
@@ -215,10 +215,10 @@ function ExitoContent() {
               onClick={copiarCodigo}
               className="w-full bg-mawa-gradient hover:brightness-110 text-white font-bold py-3 px-6 rounded-full transition"
             >
-              {copiado ? '¡Código copiado!' : 'Copiar código'}
+              {copiado ? '¡Número copiado!' : 'Copiar número de compra'}
             </button>
             <a
-              href={`${WHATSAPP_URL}?text=${encodeURIComponent(`Hola, compré en la tienda web y mi código es ${codigo}. Tengo una duda:`)}`}
+              href={`${WHATSAPP_URL}?text=${encodeURIComponent(`Hola, compré en la tienda web y mi número de compra es ${codigo}. Tengo una duda:`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 w-full bg-whatsapp hover:bg-[#1ebe5b] text-white font-semibold py-3 px-6 rounded-full transition-colors"
@@ -226,7 +226,7 @@ function ExitoContent() {
               <IconoWhatsApp /> ¿Dudas? Escríbenos por WhatsApp
             </a>
             <Link href="/mi-codigo" className="block w-full text-mawa-gris hover:text-mawa-ink font-medium py-2 text-sm">
-              ¿No te llegó el WhatsApp? Reenviar mi código
+              ¿No te llegó el WhatsApp? Reenviar mi número de compra
             </Link>
             <Link
               href="/"

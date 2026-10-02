@@ -79,8 +79,8 @@ export const PASOS = [
     texto: 'Tarjeta de crédito o débito, PSE, Nequi o Daviplata. Pago seguro procesado por Bold, sin registrarte en ningún lado.',
   },
   {
-    titulo: 'Recibe tu código y ven a Mawá',
-    texto: 'Te enviamos el código por WhatsApp al instante. Preséntalo en la entrada, recibes tu manilla y a disfrutar.',
+    titulo: 'Recibe tu número de compra y ven a Mawá',
+    texto: 'Te enviamos el número de compra por WhatsApp al instante. Indícalo en recepción al llegar, recibes tu manilla y a disfrutar.',
   },
 ]
 
@@ -96,13 +96,13 @@ export const FAQS: Faq[] = [
     respuesta: 'Estamos en el Km 37,5 de la vía Panamericana entre Ipiales y Pasto, en el municipio de Iles (Nariño), a unos 40 minutos de ambas ciudades. Desde la vía principal son 800 metros hasta la entrada. Hay parqueadero.',
   },
   {
-    pregunta: '¿Hasta cuándo puedo usar mi código?',
-    respuesta: 'Tu código es válido durante 30 días a partir de la fecha de visita que elijas, cualquier sábado, domingo o festivo. Si no puedes venir el día planeado, lo usas otro día dentro de ese plazo sin trámites.',
+    pregunta: '¿Hasta cuándo puedo usar mi compra?',
+    respuesta: 'Tu compra es válida durante 30 días a partir de la fecha de visita que elijas, cualquier sábado, domingo o festivo. Si no puedes venir el día planeado, avísanos por WhatsApp la nueva fecha dentro de ese plazo y revisamos la disponibilidad.',
   },
   {
     pregunta: '¿Cómo recibo la entrada después de pagar?',
-    respuesta: 'Al confirmarse el pago te mostramos el código en pantalla y te lo enviamos por WhatsApp al celular que registraste. En la entrada lo presentas y recibes tu manilla de acceso. Si lo pierdes, te lo reenviamos.',
-    enlace: { href: '/mi-codigo', texto: 'Recuperar mi código' },
+    respuesta: 'Al confirmarse el pago te mostramos el número de compra en pantalla y te lo enviamos por WhatsApp al celular que registraste. Al llegar lo indicas en recepción y recibes tu manilla de acceso. Si lo pierdes, te lo reenviamos.',
+    enlace: { href: '/mi-codigo', texto: 'Recuperar mi número de compra' },
   },
   {
     pregunta: '¿Qué incluye el almuerzo?',

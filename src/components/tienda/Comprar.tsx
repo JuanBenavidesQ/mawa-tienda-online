@@ -438,7 +438,7 @@ export default function Comprar() {
                 <Paso
                   numero={2}
                   titulo={tabActivo === 'pasadia' ? 'Elige la fecha de tu visita' : 'Elige la fecha de llegada'}
-                  sub="Es la fecha que planeas venir. Tu código vale 30 días desde ese día, cualquier sábado, domingo o festivo."
+                  sub="Es la fecha que planeas venir. Tu compra vale 30 días desde ese día, cualquier sábado, domingo o festivo."
                 />
                 {tabActivo === 'alojamiento' && (
                   <p className="text-sm text-mawa-marron bg-mawa-crema p-3 rounded-xl mb-4">
@@ -477,7 +477,7 @@ export default function Comprar() {
             {/* 3. Datos */}
             {haySeleccion && fechaVisita && (
               <section ref={refDatos} className="bg-white rounded-3xl shadow-lg shadow-mawa-verde-900/5 p-5 sm:p-8 scroll-mt-20">
-                <Paso numero={3} titulo="Tus datos" sub="Al celular que registres te enviamos el código por WhatsApp." />
+                <Paso numero={3} titulo="Tus datos" sub="Al celular que registres te enviamos el número de compra por WhatsApp." />
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="nombre" className="block text-sm font-semibold text-mawa-ink mb-1">Nombre completo *</label>

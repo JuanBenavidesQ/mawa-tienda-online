@@ -25,7 +25,7 @@ export default function Hero() {
         </h1>
         <p className="mt-5 text-lg sm:text-xl text-white/90 max-w-2xl">
           Piscinas y toboganes, puentes tibetanos y almuerzo incluido, en el corazón de la montaña nariñense.
-          Paga en línea, recibe tu código por WhatsApp al instante y preséntalo en la entrada.
+          Paga en línea, recibe tu número de compra por WhatsApp al instante e indícalo en recepción al llegar.
         </p>
 
         <div className="mt-8 flex flex-col sm:flex-row gap-3 sm:items-center">
@@ -46,7 +46,7 @@ export default function Hero() {
           </li>
           <li className="flex items-center gap-3 bg-white/10 backdrop-blur rounded-xl px-4 py-3">
             <IconoTicket className="w-5 h-5 text-mawa-crema shrink-0" />
-            <span>Código por WhatsApp, válido 30 días</span>
+            <span>Número de compra por WhatsApp, válido 30 días</span>
           </li>
           <li className="flex items-center gap-3 bg-white/10 backdrop-blur rounded-xl px-4 py-3">
             <IconoReloj className="w-5 h-5 text-mawa-crema shrink-0" />

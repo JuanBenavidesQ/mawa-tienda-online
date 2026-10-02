@@ -67,7 +67,7 @@ export default function FormularioMiCodigo() {
     }
   }
 
-  const mensajeWa = `${WHATSAPP_URL}?text=${encodeURIComponent(`Hola Mawá, compré entradas en la tienda web con el celular ${celular || '...'} y perdí mi código. ¿Me lo pueden reenviar?`)}`
+  const mensajeWa = `${WHATSAPP_URL}?text=${encodeURIComponent(`Hola Mawá, compré entradas en la tienda web con el celular ${celular || '...'} y perdí mi número de compra. ¿Me lo pueden reenviar?`)}`
   const inputClase =
     'w-full px-4 py-3 rounded-xl border border-mawa-verde-900/20 bg-white text-mawa-ink placeholder:text-mawa-gris/60 focus:outline-none focus:ring-2 focus:ring-mawa-verde-500 focus:border-mawa-verde-500'
 
@@ -95,7 +95,7 @@ export default function FormularioMiCodigo() {
           disabled={estado === 'cargando'}
           className="w-full bg-mawa-gradient disabled:opacity-60 text-white font-bold py-3.5 px-6 rounded-full shadow hover:brightness-110 transition"
         >
-          {estado === 'cargando' ? 'Buscando...' : 'Reenviar mi código por WhatsApp'}
+          {estado === 'cargando' ? 'Buscando...' : 'Reenviar mi número de compra por WhatsApp'}
         </button>
       </form>
 
@@ -112,10 +112,10 @@ export default function FormularioMiCodigo() {
                 className={`rounded-xl p-4 text-sm ${enviado ? 'bg-mawa-verde-500/10 text-mawa-verde-900' : 'bg-mawa-crema text-mawa-ink'}`}
               >
                 {enviado
-                  ? 'Te enviamos por WhatsApp los códigos activos al celular registrado. Revisa tus mensajes en un momento.'
+                  ? 'Te enviamos por WhatsApp tus números de compra activos al celular registrado. Revisa tus mensajes en un momento.'
                   : codigos.some((c) => c.estado === 'ACTIVO')
-                    ? 'Ya te reenviamos tus códigos hace menos de una hora. Revisa tu WhatsApp; si no llegó, escríbenos.'
-                    : 'No tienes códigos activos por reenviar: los de esta lista ya fueron usados, vencieron o no se confirmó el pago.'}
+                    ? 'Ya te reenviamos tus números de compra hace menos de una hora. Revisa tu WhatsApp; si no llegó, escríbenos.'
+                    : 'No tienes compras activas por reenviar: las de esta lista ya fueron usadas, vencieron o no se confirmó el pago.'}
               </div>
               <ul className="divide-y divide-mawa-verde-900/10 border-y border-mawa-verde-900/10">
                 {codigos.map((c) => {
@@ -138,7 +138,7 @@ export default function FormularioMiCodigo() {
                 })}
               </ul>
               <p className="text-xs text-mawa-gris">
-                Por seguridad mostramos los códigos incompletos: el código completo solo llega al WhatsApp del celular con el que compraste.
+                Por seguridad mostramos los números de compra incompletos: el número completo solo llega al WhatsApp del celular con el que compraste.
               </p>
             </>
           )}
